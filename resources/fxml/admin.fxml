@@ -174,6 +174,55 @@
                                 </children>
                             </GridPane>
                         </content></Tab>
+                        <Tab text="Discipline">
+                            <content>
+                                <GridPane>
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <ListView prefHeight="200.0" prefWidth="200.0">
+                                            <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </GridPane.margin>
+                                        </ListView>
+                                        <GridPane GridPane.columnIndex="1">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="70.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <Label text="Naziv: " GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                                                    <GridPane.margin>
+                                                        <Insets />
+                                                    </GridPane.margin>
+                                                </Label>
+                                                <TextField fx:id="disciplineNameFld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Button fx:id="deleteDisciplineBtn" mnemonicParsing="false" onAction="#deleteDiscipline" styleClass="deleteDisciplineBtn" stylesheets="@../css/style.css" text="Obriši" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                                    <GridPane.margin>
+                                                        <Insets right="5.0" />
+                                                    </GridPane.margin>
+                                                </Button>
+                                                <Button fx:id="addDisciplineBtn" mnemonicParsing="false" onAction="#addDiscipline" styleClass="addDisciplineBtn" stylesheets="@../css/style.css" text="Dodaj" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                    <GridPane.margin>
+                                                        <Insets left="5.0" />
+                                                    </GridPane.margin>
+                                                </Button>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </GridPane>
+                            </content>
+                        </Tab>
                         <Tab text="Rezervisani termini">
                            <content>
                               <GridPane>

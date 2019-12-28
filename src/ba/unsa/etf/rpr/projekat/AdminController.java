@@ -41,4 +41,11 @@ public class AdminController {
         myStage.show();
     }
 
+    public void deleteDiscipline(ActionEvent actionEvent) {
+        //brisat ce se ta disciplina iz baze
+    }
+
+    public void addDiscipline(ActionEvent actionEvent) {
+        //dodavat ce disciplinu u bazu
+    }
 }

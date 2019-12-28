@@ -14,7 +14,7 @@
     -fx-font-weight: bold;
 }
 
-.changePasswordUrl, .loginBtn, .membershipFeeBtn, .checkActivityBtn {
+.changePasswordUrl, .loginBtn, .membershipFeeBtn, .checkActivityBtn, .deleteDisciplineBtn, .addDisciplineBtn {
     -fx-text-fill: orange;
     -fx-font-weight: bold;
 }
@@ -23,6 +23,7 @@
     -fx-text-fill: orange;
     -fx-font-weight: bold;
 }
+
 .usernameFld, .passwordFld, .nameFld, .surnameFld, .usernameFld, .passwordFld, .passwordRepeatFld, .disciplineChoice, .objectChoice {
     -fx-background-color: #ffe6b3;
 }
