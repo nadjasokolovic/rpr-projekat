@@ -1,0 +1,28 @@
+.gridContainer {
+    -fx-background-image: url("/images/pozadina.jpg");
+}
+
+.accountBtn {
+    -fx-background-image: url("/images/user_icon.png");
+    -fx-background-size: 32px 32px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: left;
+}
+
+.signupBtn, .createAccountBtn, .confirmBtn, .radioBtn1, .radioBtn2, .radioBtn3, .reserveBtn, .editAccountBtn, .rateObjectBtn, .exitBtn {
+    -fx-text-fill: orange;
+    -fx-font-weight: bold;
+}
+
+.changePasswordUrl, .loginBtn, .membershipFeeBtn, .checkActivityBtn {
+    -fx-text-fill: orange;
+    -fx-font-weight: bold;
+}
+
+.adminCheckbox, .label {
+    -fx-text-fill: orange;
+    -fx-font-weight: bold;
+}
+.usernameFld, .passwordFld, .nameFld, .surnameFld, .usernameFld, .passwordFld, .passwordRepeatFld, .disciplineChoice, .objectChoice {
+    -fx-background-color: #ffe6b3;
+}
