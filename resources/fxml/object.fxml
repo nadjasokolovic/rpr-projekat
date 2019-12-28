@@ -46,7 +46,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Button fx:id="accountBtn" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" styleClass="accountBtn" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.valignment="TOP">
+                        <Button fx:id="accountBtn" mnemonicParsing="false" onAction="#goToProfil" prefHeight="35.0" prefWidth="35.0" styleClass="accountBtn" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.valignment="TOP">
                             <GridPane.margin>
                                 <Insets top="7.0" />
                             </GridPane.margin></Button>
@@ -59,7 +59,7 @@
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
@@ -94,13 +94,13 @@
                    <TableView fx:id="personTableView" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2">
                        <columns>
                            <TableColumn fx:id="startColumn" editable="false" maxWidth="Infinity" prefWidth="181.0" sortable="false" text="Početak" />
-                           <TableColumn fx:id="endColumn" editable="false" maxWidth="Infinity" prefWidth="160.0" sortable="false" text="Kraj" />
+                           <TableColumn fx:id="endColumn" editable="false" maxWidth="1.7976931348623157E308" prefWidth="160.0" sortable="false" text="Kraj" />
                        </columns>
                      <GridPane.margin>
                         <Insets bottom="5.0" />
                      </GridPane.margin>
                    </TableView>
-                  <Button fx:id="reserveBtn" mnemonicParsing="false" styleClass="reserveBtn" stylesheets="@../css/style.css" text="Rezerviši" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                  <Button fx:id="reserveBtn" mnemonicParsing="false" onAction="#makeReservation" styleClass="reserveBtn" stylesheets="@../css/style.css" text="Rezerviši" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                </children>
                 </GridPane>
             </children>

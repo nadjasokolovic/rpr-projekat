@@ -75,14 +75,14 @@
                   <TextField fx:id="usernameFld" styleClass="usernameFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
                   <TextField fx:id="passwordFld" styleClass="passwordFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <Hyperlink fx:id="changePasswordUrl" styleClass="changePasswordUrl" stylesheets="@../css/style.css" text="Zaboravili ste password?" underline="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                  <Button fx:id="loginBtn" mnemonicParsing="false" styleClass="loginBtn" stylesheets="@../css/style.css" text="Prijavi se" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                  <Button fx:id="loginBtn" mnemonicParsing="false" onAction="#loginAction" styleClass="loginBtn" stylesheets="@../css/style.css" text="Prijavi se" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </Button>
                </children>
                 </GridPane>
-            <Button fx:id="signupBtn" mnemonicParsing="false" styleClass="signupBtn" stylesheets="@../css/style.css" text="Registruj se" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP" />
+            <Button fx:id="signupBtn" mnemonicParsing="false" onAction="#signUpAction" styleClass="signupBtn" stylesheets="@../css/style.css" text="Registruj se" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP" />
             </children>
             <padding>
                 <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />

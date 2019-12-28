@@ -36,10 +36,10 @@
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin></ImageView>
-                <GridPane GridPane.columnSpan="2" GridPane.rowIndex="1">
+                <GridPane styleClass="signupBtn" stylesheets="@../css/style.css" GridPane.columnSpan="2" GridPane.rowIndex="1">
                     <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                        <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="130.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -62,7 +62,11 @@
                   <TextField fx:id="namefld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" />
                   <TextField fx:id="surnameFld" styleClass="surnameFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <TextField fx:id="usernameFld" styleClass="usernameFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <Button fx:id="createAccountBtn" mnemonicParsing="false" styleClass="createAccountBtn" stylesheets="@../css/style.css" text="Potvrdi" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                  <Button fx:id="createAccountBtn" mnemonicParsing="false" onAction="#createAccount" styleClass="createAccountBtn" stylesheets="@../css/style.css" text="Potvrdi" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                  <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#closeWindow" styleClass="exitBtn" stylesheets="@../css/style.css" text="Odustani" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets left="70.0" />
+                     </GridPane.margin></Button>
                </children>
                 </GridPane>
             </children>

@@ -94,8 +94,8 @@
                   </ListView>
                   <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.halignment="LEFT">
                     <buttons>
-                      <Button fx:id="editAccountBtn" mnemonicParsing="false" styleClass="editAccountBtn" stylesheets="@../css/style.css" text="Uredi profil" />
-                        <Button fx:id="rateObjectBtn" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="31.0" prefWidth="129.0" styleClass="rateObjectBtn" stylesheets="@../css/style.css" text="Ocijeni objekat" />
+                      <Button fx:id="editAccountBtn" mnemonicParsing="false" onAction="#editProfil" styleClass="editAccountBtn" stylesheets="@../css/style.css" text="Uredi profil" />
+                        <Button fx:id="rateObjectBtn" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#rateObject" prefHeight="31.0" prefWidth="129.0" styleClass="rateObjectBtn" stylesheets="@../css/style.css" text="Ocijeni objekat" />
                     </buttons>
                      <GridPane.margin>
                         <Insets right="65.0" />

@@ -45,7 +45,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Button fx:id="accountBtn" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" styleClass="accountBtn" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.valignment="TOP">
+                        <Button fx:id="accountBtn" mnemonicParsing="false" onAction="#goToProfil" prefHeight="35.0" prefWidth="35.0" styleClass="accountBtn" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.valignment="TOP">
                             <GridPane.margin>
                                 <Insets top="7.0" />
                             </GridPane.margin></Button>
@@ -75,12 +75,12 @@
                      </GridPane.margin>
                   </Label>
                   <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="31.0" prefWidth="50.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Button fx:id="exitBtn" mnemonicParsing="false" styleClass="exitBtn" stylesheets="@../css/style.css" text="Odustani" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                  <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#closeWindow" styleClass="exitBtn" stylesheets="@../css/style.css" text="Odustani" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets right="5.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="confirmBtn" mnemonicParsing="false" styleClass="confirmBtn" stylesheets="@../css/style.css" text="Potvrdi" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Button fx:id="confirmBtn" mnemonicParsing="false" onAction="#rateObject" styleClass="confirmBtn" stylesheets="@../css/style.css" text="Potvrdi" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets left="5.0" />
                      </GridPane.margin>
