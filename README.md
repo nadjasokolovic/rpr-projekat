@@ -4,7 +4,7 @@ Procesi
 - Korisnik kreira račun unoseći svoje ime, prezime, username i password.
 - Korisnik u svakom trenutku može uređivati podatke na svom računu.
 - Korisnik ima mogućnost pregleda i izbora različitih sportskih disciplina, kao na primjer pilates, crossfit, fitness, kuglanje itd.
-- Nakon odabrane željene discipline korisnik ima mogućnost pregleda svih sportskih objekata koji imaju organizovane treninge za taj dan. - - Prikazuje se lokacija objekta, prosječna ocjena od strane ostalih korisnika, kao i svi termini treninga.
+- Nakon odabrane željene discipline korisnik ima mogućnost pregleda svih sportskih objekata koji imaju organizovane treninge za taj dan. - Prikazuje se lokacija objekta, prosječna ocjena od strane ostalih korisnika, kao i svi termini treninga.
 - Korisnik ima mogućnost izbora kriterija sortiranja objekata. Objekti mogu biti sortirani po prosječnoj ocjeni, po lokaciji (da se prikazuju objekti sa iste lokacije jedan ispod drugog) ili abecednom redoslijedu.
 - Korisnici imaju mogućnost da daju ocjenu od 1 do 5 za neki sportski objekat.
 - Korisnici mogu rezervisati neki od ponuđenih termina, a rezervacijom nekog termina smatra se da je iskoristio jedan od ukupnog broja mogućih termina za taj mjesec.
