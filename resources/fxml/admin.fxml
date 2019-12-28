@@ -163,7 +163,7 @@
                                 </children>
                             </GridPane>
                         </content></Tab>
-                        <Tab text="Rezervisani treninzi">
+                        <Tab text="Rezervisani termini">
                            <content>
                               <GridPane>
                                 <columnConstraints>
