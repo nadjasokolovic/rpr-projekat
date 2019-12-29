@@ -2,6 +2,7 @@ package ba.unsa.etf.rpr.projekat;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,5 +21,12 @@ public class ChangePasswordController {
         myStage.setTitle("Fitpass Sarajevo");
         myStage.setScene(new Scene(root, 700, 500));
         myStage.show();
+    }
+
+    public void rememberNewPassword(ActionEvent actionEvent) {
+        //azurirati password korisniku
+        Node n = (Node) actionEvent.getSource();
+        Stage stage = (Stage) n.getScene().getWindow();
+        stage.close();
     }
 }

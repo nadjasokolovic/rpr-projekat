@@ -51,4 +51,17 @@ public class LoginController {
         myStage.setScene(new Scene(root, 700, 500));
         myStage.show();
     }
+
+    public void changePassword(ActionEvent actionEvent) {
+        Parent root = null;
+        Stage myStage = new Stage();
+        try {
+            root = FXMLLoader.load(getClass().getResource("/fxml/changePassword.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        myStage.setTitle("Fitpass Sarajevo");
+        myStage.setScene(new Scene(root, 700, 500));
+        myStage.show();
+    }
 }
