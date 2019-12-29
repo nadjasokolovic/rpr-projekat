@@ -9,7 +9,12 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
+        LoginModel model = new LoginModel();
+        LoginController ctrl = new LoginController(model);
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+        loader.setController(ctrl);
+        Parent root = loader.load();
         primaryStage.setTitle("Fitpass Sarajevo");
         primaryStage.setScene(new Scene(root, 700, 500));
         primaryStage.show();

@@ -24,6 +24,13 @@
     -fx-font-weight: bold;
 }
 
-.usernameFld, .passwordFld, .nameFld, .surnameFld, .usernameFld, .passwordFld, .passwordRepeatFld, .disciplineChoice, .objectChoice {
+/*.nameFld, .surnameFld, .usernameFld, .passwordFld, .passwordRepeatFld, .disciplineChoice, .objectChoice {
     -fx-background-color: #ffe6b3;
+}*/
+
+.poljeIspravno {
+    -fx-control-iner-background: greenyellow;
+}
+.poljeNijeIspravno {
+    -fx-control-iner-background: lightpink;
 }

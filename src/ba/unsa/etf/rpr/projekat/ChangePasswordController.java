@@ -10,11 +10,23 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class ChangePasswordController {
+
+    ChangePasswordModel model = new ChangePasswordModel();
+
+    public ChangePasswordController(ChangePasswordModel model) {
+        this.model = model;
+    }
+
     public void goToProfil(ActionEvent actionEvent) {
-        Parent root = null;
+        UserAccountModel model = new UserAccountModel();
+        UserAccountController ctrl = new UserAccountController(model);
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"));
+        loader.setController(ctrl);
         Stage myStage = new Stage();
+        Parent root = null;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/userAccount.fxml"));
+            root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }

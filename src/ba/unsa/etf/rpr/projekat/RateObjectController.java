@@ -10,6 +10,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class RateObjectController {
+    RateObjectModel model;
+
+    public RateObjectController(RateObjectModel model) {
+        this.model = model;
+    }
+
     public void closeWindow(ActionEvent actionEvent) {
         //korisnik je odustao od ocjenjivanja objekta i nema potrebe za upisivanjem u bazu
         Node n = (Node) actionEvent.getSource();
@@ -26,10 +32,15 @@ public class RateObjectController {
     }
 
     public void goToProfil(ActionEvent actionEvent) {
-        Parent root = null;
+        UserAccountModel model = new UserAccountModel();
+        UserAccountController ctrl = new UserAccountController(model);
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"));
+        loader.setController(ctrl);
         Stage myStage = new Stage();
+        Parent root = null;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/userAccount.fxml"));
+            root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }

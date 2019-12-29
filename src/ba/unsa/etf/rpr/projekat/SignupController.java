@@ -5,6 +5,12 @@ import javafx.scene.Node;
 import javafx.stage.Stage;
 
 public class SignupController {
+    SignupModel model;
+
+    public SignupController(SignupModel model) {
+        this.model = model;
+    }
+
     public void createAccount(ActionEvent actionEvent) {
         //upisati novog korisnika u bazu
 

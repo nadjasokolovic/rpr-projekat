@@ -10,6 +10,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class ObjectController {
+
+    ObjectModel model = new ObjectModel();
+
+    public ObjectController(ObjectModel model) {
+        this.model = model;
+    }
+
     public void makeReservation(ActionEvent actionEvent) {
         //treba upisati rezervaciju u bazu i otvorit alert na kojem pise uspjesno ste rezervisali
         //korisnik je odustao od uredjivanja profila i nema potrebe za upisivanjem u bazu
@@ -19,10 +26,15 @@ public class ObjectController {
     }
 
     public void goToProfil(ActionEvent actionEvent) {
-        Parent root = null;
+        UserAccountModel model = new UserAccountModel();
+        UserAccountController ctrl = new UserAccountController(model);
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"));
+        loader.setController(ctrl);
         Stage myStage = new Stage();
+        Parent root = null;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/userAccount.fxml"));
+            root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
