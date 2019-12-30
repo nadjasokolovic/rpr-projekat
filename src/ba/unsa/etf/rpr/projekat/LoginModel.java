@@ -2,25 +2,18 @@ package ba.unsa.etf.rpr.projekat;
 
 public class LoginModel {
 
-    public LoginModel() {}
+    private Validacija validacija;
 
-    //validacije
-    public boolean validirajUsername(String newUsername) {
-        //validan username mora imati barem 4 znaka
-        if(newUsername.length() < 4) return false;
-        //validan username moze sadrzavati samo velika i mala slova i cifre 0-9
-        for(char c : newUsername.toCharArray())
-            if(!Character.isLetter(c) && !Character.isDigit(c))
-                return false;
-
-        return true;
+    public LoginModel() {
+        validacija = new Validacija();
     }
 
-    public boolean validirajPassword(String newPassword) {
-        //validan password mora imati barem 4 znaka
-        if(newPassword.length() < 4) return false;
+    public Validacija getValidacija() {
+        return validacija;
+    }
 
-        return true;
+    public void setValidacija(Validacija validacija) {
+        this.validacija = validacija;
     }
 
     public boolean validiraj(String username, String password) {

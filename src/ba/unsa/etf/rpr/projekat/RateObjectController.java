@@ -1,19 +1,41 @@
 package ba.unsa.etf.rpr.projekat;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class RateObjectController {
+    public ChoiceBox objectChoice;
+    public Button exitBtn;
+    public TextField objectRateFld;
+    public Button confirmBtn;
+
     RateObjectModel model;
 
     public RateObjectController(RateObjectModel model) {
         this.model = model;
+    }
+
+    @FXML
+    public void initialize() {
+        objectRateFld.textProperty().addListener((obs, oldRate, newRate) -> {
+            if (model.getValidacija().validirajOcjenu(Integer.parseInt(newRate))) {
+                objectRateFld.getStyleClass().removeAll("poljeNijeIspravno");
+                objectRateFld.getStyleClass().add("poljeIspravno");
+            } else {
+                objectRateFld.getStyleClass().removeAll("poljeIspravno");
+                objectRateFld.getStyleClass().add("poljeNijeIspravno");
+            }
+        });
     }
 
     public void closeWindow(ActionEvent actionEvent) {

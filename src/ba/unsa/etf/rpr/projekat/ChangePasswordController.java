@@ -1,20 +1,58 @@
 package ba.unsa.etf.rpr.projekat;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class ChangePasswordController {
 
+    public PasswordField passwordFld;
+    public PasswordField passwordRepeatFld;
+    public Button confirmBtn;
+
     ChangePasswordModel model = new ChangePasswordModel();
 
     public ChangePasswordController(ChangePasswordModel model) {
         this.model = model;
+    }
+
+    @FXML
+    public void initialize() {
+        passwordFld.textProperty().addListener((obs, oldPassword, newPassword) -> {
+            if (model.getValidacija().validirajPassword(newPassword) && newPassword.equals(passwordRepeatFld.getText())) {
+                passwordFld.getStyleClass().removeAll("poljeNijeIspravno");
+                passwordFld.getStyleClass().add("poljeIspravno");
+                passwordRepeatFld.getStyleClass().removeAll("poljeNijeIspravno");
+                passwordRepeatFld.getStyleClass().add("poljeIspravno");
+            } else {
+                passwordFld.getStyleClass().removeAll("poljeIspravno");
+                passwordFld.getStyleClass().add("poljeNijeIspravno");
+                passwordRepeatFld.getStyleClass().removeAll("poljeIspravno");
+                passwordRepeatFld.getStyleClass().add("poljeNijeIspravno");
+            }
+        });
+
+        passwordRepeatFld.textProperty().addListener((obs, oldPasswordRepeat, newPasswordRepeat) -> {
+            if (model.getValidacija().validirajPassword(newPasswordRepeat) && newPasswordRepeat.equals(passwordFld.getText())) {
+                passwordRepeatFld.getStyleClass().removeAll("poljeNijeIspravno");
+                passwordRepeatFld.getStyleClass().add("poljeIspravno");
+                passwordFld.getStyleClass().removeAll("poljeNijeIspravno");
+                passwordFld.getStyleClass().add("poljeIspravno");
+            } else {
+                passwordRepeatFld.getStyleClass().removeAll("poljeIspravno");
+                passwordRepeatFld.getStyleClass().add("poljeNijeIspravno");
+                passwordFld.getStyleClass().removeAll("poljeIspravno");
+                passwordFld.getStyleClass().add("poljeNijeIspravno");
+            }
+        });
     }
 
     public void goToProfil(ActionEvent actionEvent) {

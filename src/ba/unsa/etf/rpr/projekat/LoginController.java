@@ -30,7 +30,7 @@ public class LoginController {
     @FXML
     public void initialize() {
         usernameFld.textProperty().addListener((obs, oldUsername, newUsername) -> {
-            if (model.validirajUsername(newUsername)) {
+            if (model.getValidacija().validirajUsername(newUsername)) {
                 usernameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 usernameFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -40,7 +40,7 @@ public class LoginController {
         });
 
         passwordFld.textProperty().addListener((obs, oldPasword, newPassword) -> {
-            if (model.validirajPassword(newPassword)) {
+            if (model.getValidacija().validirajPassword(newPassword)) {
                 passwordFld.getStyleClass().removeAll("poljeNijeIspravno");
                 passwordFld.getStyleClass().add("poljeIspravno");
             } else {

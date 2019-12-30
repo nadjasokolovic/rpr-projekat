@@ -24,13 +24,13 @@
     -fx-font-weight: bold;
 }
 
-/*.nameFld, .surnameFld, .usernameFld, .passwordFld, .passwordRepeatFld, .disciplineChoice, .objectChoice {
-    -fx-background-color: #ffe6b3;
-}*/
+.usernameFld, .passwordFld, .nameFld, .surnameFld, .usernameFld, .passwordFld, .passwordRepeatFld, .disciplineChoice, .objectChoice {
+    -fx-control-inner-background: #ffe6b3;
+}
 
 .poljeIspravno {
-    -fx-control-iner-background: greenyellow;
+    -fx-control-inner-background: greenyellow;
 }
 .poljeNijeIspravno {
-    -fx-control-iner-background: lightpink;
+    -fx-control-inner-background: lightpink;
 }
