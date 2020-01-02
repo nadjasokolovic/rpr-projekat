@@ -9,7 +9,7 @@
     -fx-background-position: left;
 }
 
-.signupBtn, .createAccountBtn, .confirmBtn, .radioBtn1, .radioBtn2, .radioBtn3, .reserveBtn, .editAccountBtn, .rateObjectBtn, .exitBtn, .addBtn, .deleteBtn {
+.signupBtn, .createAccountBtn, .confirmBtn, .radioBtn1, .radioBtn2, .radioBtn3, .reserveBtn, .editAccountBtn, .rateObjectBtn, .exitBtn, .addBtn, .editBtn, .deleteBtn {
     -fx-text-fill: orange;
     -fx-font-weight: bold;
 }

@@ -19,6 +19,9 @@ public class AdminController {
     public TextField nameFld;
     public TextField surnameFld;
     public TextField usernameFld;
+    public Button addUserBtn;
+    public Button editUserBtn;
+    public Button deleteUserbtn;
     public Button checkActivityBtn;
     public Button membershipFeeBtn;
     public PasswordField passwordFld;
@@ -26,8 +29,8 @@ public class AdminController {
     public TextField objectNameFld;
     public TextField objectLocationFld;
     public TextField objectRateFld;
-    public Button deleteBtn;
-    public Button addBtn;
+    public Button deleteObjectBtn;
+    public Button addObjectBtn;
     //tab discipline
     public TextField disciplineNameFld;
     public Button deleteDisciplineBtn;
@@ -122,12 +125,28 @@ public class AdminController {
         });
     }
 
+    public void addUser(ActionEvent actionEvent) {
+        //treba izbrisati objekat iz baze
+    }
+
+    public void editUser(ActionEvent actionEvent) {
+        //treba izbrisati objekat iz baze
+    }
+
+    public void deleteUser(ActionEvent actionEvent) {
+        //treba izbrisati objekat iz baze
+    }
+
     public void deleteObject(ActionEvent actionEvent) {
         //treba izbrisati objekat iz baze
     }
 
     public void addObject(ActionEvent actionEvent) {
         //treba dodati objekat u bazu
+    }
+
+    public void editObject(ActionEvent actionEvent) {
+        //treba izbrisati objekat iz baze
     }
 
     public void checkActivity(ActionEvent actionEvent) {
