@@ -1,7 +1,5 @@
 package ba.unsa.etf.rpr.projekat;
 
-import java.sql.PreparedStatement;
-
 public class SignupModel {
 
     private Validacija validacija;
