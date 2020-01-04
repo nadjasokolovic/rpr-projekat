@@ -9,15 +9,15 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class UserAccountController {
-    UserAccountModel model;
+    FitpassDAO dao = FitpassDAO.getInstance();
 
-    public UserAccountController(UserAccountModel model) {
-        this.model = model;
+    public UserAccountController(FitpassDAO dao) {
+        this.dao = dao;
     }
 
     public void editProfil(ActionEvent actionEvent) {
-        SignupModel model = new SignupModel();
-        SignupController ctrl = new SignupController(model);
+        FitpassDAO dao = FitpassDAO.getInstance();
+        SignupController ctrl = new SignupController(dao);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/signup.fxml"));
         loader.setController(ctrl);
@@ -34,8 +34,8 @@ public class UserAccountController {
     }
 
     public void rateObject(ActionEvent actionEvent) {
-        RateObjectModel model = new RateObjectModel();
-        RateObjectController ctrl = new RateObjectController(model);
+        FitpassDAO dao = FitpassDAO.getInstance();
+        RateObjectController ctrl = new RateObjectController(dao);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/rateObject.fxml"));
         loader.setController(ctrl);

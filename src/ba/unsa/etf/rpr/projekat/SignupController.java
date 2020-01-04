@@ -18,16 +18,16 @@ public class SignupController {
     public Button createAccountBtn;
     public Button exitBtn;
 
-    SignupModel model;
+    FitpassDAO dao = FitpassDAO.getInstance();
 
-    public SignupController(SignupModel model) {
-        this.model = model;
+    public SignupController(FitpassDAO dao) {
+        this.dao = dao;
     }
 
     @FXML
     public void initialize() {
         namefld.textProperty().addListener((obs, oldName, newName) -> {
-            if (model.getValidacija().validirajImeIPrezime(newName)) {
+            if (dao.getValidation().validateNameAndSurname(newName)) {
                 namefld.getStyleClass().removeAll("poljeNijeIspravno");
                 namefld.getStyleClass().add("poljeIspravno");
             } else {
@@ -37,7 +37,7 @@ public class SignupController {
         });
 
         surnameFld.textProperty().addListener((obs, oldSurname, newSurname) -> {
-            if (model.getValidacija().validirajImeIPrezime(newSurname)) {
+            if (dao.getValidation().validateNameAndSurname(newSurname)) {
                 surnameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 surnameFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -47,7 +47,7 @@ public class SignupController {
         });
 
         usernameFld.textProperty().addListener((obs, oldUsername, newUsername) -> {
-            if (model.getValidacija().validirajUsername(newUsername)) {
+            if (dao.getValidation().validateUsername(newUsername)) {
                 usernameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 usernameFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -57,7 +57,7 @@ public class SignupController {
         });
 
         passwordFld.textProperty().addListener((obs, oldPassword, newPassword) -> {
-            if (model.getValidacija().validirajPassword(newPassword) && newPassword.equals(passwordRepeatFld.getText())) {
+            if (dao.getValidation().validatePassword(newPassword) && newPassword.equals(passwordRepeatFld.getText())) {
                 passwordFld.getStyleClass().removeAll("poljeNijeIspravno");
                 passwordFld.getStyleClass().add("poljeIspravno");
                 passwordRepeatFld.getStyleClass().removeAll("poljeNijeIspravno");
@@ -71,7 +71,7 @@ public class SignupController {
         });
 
         passwordRepeatFld.textProperty().addListener((obs, oldPasswordRepeat, newPasswordRepeat) -> {
-            if (model.getValidacija().validirajPassword(newPasswordRepeat) && newPasswordRepeat.equals(passwordFld.getText())) {
+            if (dao.getValidation().validatePassword(newPasswordRepeat) && newPasswordRepeat.equals(passwordFld.getText())) {
                 passwordRepeatFld.getStyleClass().removeAll("poljeNijeIspravno");
                 passwordRepeatFld.getStyleClass().add("poljeIspravno");
                 passwordFld.getStyleClass().removeAll("poljeNijeIspravno");

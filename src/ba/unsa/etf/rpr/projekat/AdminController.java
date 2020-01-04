@@ -37,15 +37,16 @@ public class AdminController {
     public Button addDisciplineBtn;
 
     AdminModel model;
+    private FitpassDAO dao = FitpassDAO.getInstance();
 
-    public AdminController(AdminModel model) {
-        this.model = model;
+    public AdminController(FitpassDAO dao) {
+        this.dao = dao;
     }
 
     @FXML
     public void initialize() {
         nameFld.textProperty().addListener((obs, oldName, newName) -> {
-            if (model.getValidacija().validirajImeIPrezime(newName)) {
+            if (dao.getValidation().validateNameAndSurname(newName)) {
                 nameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 nameFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -55,7 +56,7 @@ public class AdminController {
         });
 
         surnameFld.textProperty().addListener((obs, oldSurname, newSurname) -> {
-            if (model.getValidacija().validirajImeIPrezime(newSurname)) {
+            if (dao.getValidation().validateNameAndSurname(newSurname)) {
                 surnameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 surnameFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -65,7 +66,7 @@ public class AdminController {
         });
 
         usernameFld.textProperty().addListener((obs, oldUsername, newUsername) -> {
-            if (model.getValidacija().validirajUsername(newUsername)) {
+            if (dao.getValidation().validateUsername(newUsername)) {
                 usernameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 usernameFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -75,7 +76,7 @@ public class AdminController {
         });
 
         passwordFld.textProperty().addListener((obs, oldPassword, newPassword) -> {
-            if (model.getValidacija().validirajPassword(newPassword)) {
+            if (dao.getValidation().validatePassword(newPassword)) {
                 passwordFld.getStyleClass().removeAll("poljeNijeIspravno");
                 passwordFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -85,7 +86,7 @@ public class AdminController {
         });
 
         objectNameFld.textProperty().addListener((obs, oldObjectName, newObjectName) -> {
-            if (model.getValidacija().validirajNazivObjekta(newObjectName)) {
+            if (dao.getValidation().validateNameOfObject(newObjectName)) {
                 objectNameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 objectNameFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -95,7 +96,7 @@ public class AdminController {
         });
 
         objectLocationFld.textProperty().addListener((obs, oldObjectLocation, newObjectLocation) -> {
-            if (model.getValidacija().validirajNazivLokacije(newObjectLocation)) {
+            if (dao.getValidation().validateLocation(newObjectLocation)) {
                 objectLocationFld.getStyleClass().removeAll("poljeNijeIspravno");
                 objectLocationFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -105,7 +106,7 @@ public class AdminController {
         });
 
         objectRateFld.textProperty().addListener((obs, oldObjectRate, newObjectRate) -> {
-            if (model.getValidacija().validirajOcjenu(Integer.parseInt(newObjectRate))) {
+            if (dao.getValidation().validateGrade(Integer.parseInt(newObjectRate))) {
                 objectRateFld.getStyleClass().removeAll("poljeNijeIspravno");
                 objectRateFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -115,7 +116,7 @@ public class AdminController {
         });
 
         disciplineNameFld.textProperty().addListener((obs, oldDisciplineName, newDisciplineName) -> {
-            if (model.getValidacija().validirajNazivDiscipline(newDisciplineName)) {
+            if (dao.getValidation().validateDiscipline(newDisciplineName)) {
                 disciplineNameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 disciplineNameFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -161,8 +162,8 @@ public class AdminController {
     }
 
     public void goToProfil(ActionEvent actionEvent) {
-        UserAccountModel model = new UserAccountModel();
-        UserAccountController ctrl = new UserAccountController(model);
+        FitpassDAO dao = FitpassDAO.getInstance();
+        UserAccountController ctrl = new UserAccountController(dao);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"));
         loader.setController(ctrl);

@@ -10,15 +10,15 @@ import java.io.IOException;
 
 public class UserController {
 
-    UserModel model;
+    FitpassDAO dao = FitpassDAO.getInstance();
 
-    public UserController(UserModel model) {
-        this.model = model;
+    public UserController(FitpassDAO dao) {
+        this.dao = dao;
     }
 
     public void goToProfil(ActionEvent actionEvent) {
-        UserAccountModel model = new UserAccountModel();
-        UserAccountController ctrl = new UserAccountController(model);
+        FitpassDAO dao = FitpassDAO.getInstance();
+        UserAccountController ctrl = new UserAccountController(dao);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"));
         loader.setController(ctrl);

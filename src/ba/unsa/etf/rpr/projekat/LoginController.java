@@ -20,17 +20,17 @@ public class LoginController {
     public Button loginBtn;
     public Button signupBtn;
 
-    private LoginModel model;
+    FitpassDAO dao = FitpassDAO.getInstance();
 
-    public LoginController(LoginModel model) {
-        this.model = model;
+    public LoginController(FitpassDAO dao) {
+        this.dao = dao;
     }
 
 
     @FXML
     public void initialize() {
         usernameFld.textProperty().addListener((obs, oldUsername, newUsername) -> {
-            if (model.getValidacija().validirajUsername(newUsername)) {
+            if (dao.getValidation().validateUsername(newUsername)) {
                 usernameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 usernameFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -40,7 +40,7 @@ public class LoginController {
         });
 
         passwordFld.textProperty().addListener((obs, oldPasword, newPassword) -> {
-            if (model.getValidacija().validirajPassword(newPassword)) {
+            if (dao.getValidation().validatePassword(newPassword)) {
                 passwordFld.getStyleClass().removeAll("poljeNijeIspravno");
                 passwordFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -54,11 +54,11 @@ public class LoginController {
         public void loginAction(ActionEvent actionEvent) {
         Stage myStage = new Stage();
         //prilikom klika na dugme potrebno je provjeriti da li username i password pripadaju korisniku
-        if(model.validiraj(usernameFld.getText(), passwordFld.getText())) {
+        if(dao.getValidation().validate(usernameFld.getText(), passwordFld.getText())) {
             try {
                 if (adminCheckbox.isSelected()) {
-                    AdminModel model = new AdminModel();
-                    AdminController ctrl = new AdminController(model);
+                    FitpassDAO dao = FitpassDAO.getInstance();
+                    AdminController ctrl = new AdminController(dao);
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin.fxml"));
                     loader.setController(ctrl);
                     Parent root = loader.load();
@@ -67,8 +67,8 @@ public class LoginController {
                     myStage.show();
                 }
                 else {
-                    UserModel model = new UserModel();
-                    UserController ctrl = new UserController(model);
+                    FitpassDAO dao = FitpassDAO.getInstance();
+                    UserController ctrl = new UserController(dao);
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user.fxml"));
                     loader.setController(ctrl);
                     Parent root = loader.load();
@@ -95,8 +95,8 @@ public class LoginController {
 
     public void signUpAction(ActionEvent actionEvent) {
         Stage myStage = new Stage();
-        SignupModel model = new SignupModel();
-        SignupController ctrl = new SignupController(model);
+        FitpassDAO dao = FitpassDAO.getInstance();
+        SignupController ctrl = new SignupController(dao);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/signup.fxml"));
         loader.setController(ctrl);
         Parent root = null;
@@ -112,8 +112,8 @@ public class LoginController {
 
     public void changePassword(ActionEvent actionEvent) {
         Stage myStage = new Stage();
-        ChangePasswordModel model = new ChangePasswordModel();
-        ChangePasswordController ctrl = new ChangePasswordController(model);
+        FitpassDAO dao = FitpassDAO.getInstance();
+        ChangePasswordController ctrl = new ChangePasswordController(dao);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/changePassword.fxml"));
         loader.setController(ctrl);
         Parent root = null;

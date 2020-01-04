@@ -1,14 +1,14 @@
 package ba.unsa.etf.rpr.projekat;
 
-public class Validacija {
-    public boolean validirajPassword(String newPassword) {
+public class Validation {
+    public boolean validatePassword(String newPassword) {
         //validan password mora imati barem 4 znaka
         if(newPassword.length() < 4) return false;
 
         return true;
     }
 
-    public boolean validirajUsername(String newUsername) {
+    public boolean validateUsername(String newUsername) {
         //validan username mora imati barem 4 znaka
         if(newUsername.length() < 4) return false;
         //validan username moze sadrzavati samo velika i mala slova i cifre 0-9
@@ -19,7 +19,7 @@ public class Validacija {
         return true;
     }
 
-    public boolean validirajImeIPrezime(String newName) {
+    public boolean validateNameAndSurname(String newName) {
         //ne smije biti krace od 3 slova
         if(newName.length() < 3)
             return false;
@@ -34,43 +34,47 @@ public class Validacija {
         return true;
     }
 
-    public boolean validirajOcjenu(int ocjena) {
+    public boolean validateGrade(int grade) {
         //ocjena objekta mora biti od 1 do 5
-        if(ocjena < 1 || ocjena > 5)
+        if(grade < 1 || grade > 5)
             return false;
 
         return true;
     }
 
-    public boolean validirajNazivObjekta(String naziv) {
+    public boolean validateNameOfObject(String name) {
         //mora imati barem 3 slova
-        if(naziv.length() < 3) return false;
+        if(name.length() < 3) return false;
         //moze sadrzavati velika i mala slova, cifre i sve specijalne znakove
         return true;
     }
 
-    public boolean validirajNazivLokacije(String lokacija) {
+    public boolean validateLocation(String location) {
         //mora sadrzavati barem 3 slova
-        if(lokacija.length() < 3)
+        if(location.length() < 3)
             return false;
         //moze sadrzavati slova, cifre, '-', ' ' i '.'
-        for(char c : lokacija.toCharArray()) {
+        for(char c : location.toCharArray()) {
             if(!Character.isLetter(c) && !Character.isDigit(c )&& c != '-' && c != ' ' && c != '.')
                 return false;
         }
         return true;
     }
 
-    public boolean validirajNazivDiscipline(String disciplina) {
+    public boolean validateDiscipline(String discipline) {
         //mora sadrzavati barem 3 slova
-        if(disciplina.length() < 3)
+        if(discipline.length() < 3)
             return false;
         //moze sadrzavati slova, '-', ' '
-        for(char c : disciplina.toCharArray()) {
+        for(char c : discipline.toCharArray()) {
             if(!Character.isLetter(c) && c != '-' && c != ' ' )
                 return false;
         }
         return true;
     }
 
+    public boolean validate(String username, String password) {
+        //ova metoda ce provjeravati u bazi da li username i password pripadaju konkretnom korisniku
+        return true;
+    }
 }

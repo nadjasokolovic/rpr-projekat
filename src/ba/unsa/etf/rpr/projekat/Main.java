@@ -9,8 +9,8 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
-        LoginModel model = new LoginModel();
-        LoginController ctrl = new LoginController(model);
+        FitpassDAO dao = FitpassDAO.getInstance();
+        LoginController ctrl = new LoginController(dao);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
         loader.setController(ctrl);
@@ -25,3 +25,19 @@ public class Main extends Application {
     }
 
 }
+
+    /*GeografijaDAO dao = GeografijaDAO.getInstance();
+    DrzavaController ctrl = new DrzavaController(dao);
+    Stage myStage = new Stage();
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/drzava.fxml"));
+        loader.setController(ctrl);
+                Parent root = null;
+                try {
+                root = loader.load();
+                } catch (IOException e) {
+                e.printStackTrace();
+                }
+                myStage.setTitle("Država");
+                myStage.setScene(new Scene(root, 400, 200));
+                myStage.show();
+*/

@@ -18,16 +18,16 @@ public class ChangePasswordController {
     public PasswordField passwordRepeatFld;
     public Button confirmBtn;
 
-    ChangePasswordModel model = new ChangePasswordModel();
+    FitpassDAO dao = FitpassDAO.getInstance();
 
-    public ChangePasswordController(ChangePasswordModel model) {
-        this.model = model;
+    public ChangePasswordController(FitpassDAO dao) {
+        this.dao = dao;
     }
 
     @FXML
     public void initialize() {
         passwordFld.textProperty().addListener((obs, oldPassword, newPassword) -> {
-            if (model.getValidacija().validirajPassword(newPassword) && newPassword.equals(passwordRepeatFld.getText())) {
+            if (dao.getValidation().validatePassword(newPassword) && newPassword.equals(passwordRepeatFld.getText())) {
                 passwordFld.getStyleClass().removeAll("poljeNijeIspravno");
                 passwordFld.getStyleClass().add("poljeIspravno");
                 passwordRepeatFld.getStyleClass().removeAll("poljeNijeIspravno");
@@ -41,7 +41,7 @@ public class ChangePasswordController {
         });
 
         passwordRepeatFld.textProperty().addListener((obs, oldPasswordRepeat, newPasswordRepeat) -> {
-            if (model.getValidacija().validirajPassword(newPasswordRepeat) && newPasswordRepeat.equals(passwordFld.getText())) {
+            if (dao.getValidation().validatePassword(newPasswordRepeat) && newPasswordRepeat.equals(passwordFld.getText())) {
                 passwordRepeatFld.getStyleClass().removeAll("poljeNijeIspravno");
                 passwordRepeatFld.getStyleClass().add("poljeIspravno");
                 passwordFld.getStyleClass().removeAll("poljeNijeIspravno");
@@ -56,8 +56,8 @@ public class ChangePasswordController {
     }
 
     public void goToProfil(ActionEvent actionEvent) {
-        UserAccountModel model = new UserAccountModel();
-        UserAccountController ctrl = new UserAccountController(model);
+        FitpassDAO dao = FitpassDAO.getInstance();
+        UserAccountController ctrl = new UserAccountController(dao);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"));
         loader.setController(ctrl);

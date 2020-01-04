@@ -19,16 +19,16 @@ public class RateObjectController {
     public TextField objectRateFld;
     public Button confirmBtn;
 
-    RateObjectModel model;
+    FitpassDAO dao = FitpassDAO.getInstance();
 
-    public RateObjectController(RateObjectModel model) {
-        this.model = model;
+    public RateObjectController(FitpassDAO dao) {
+        this.dao = dao;
     }
 
     @FXML
     public void initialize() {
         objectRateFld.textProperty().addListener((obs, oldRate, newRate) -> {
-            if (model.getValidacija().validirajOcjenu(Integer.parseInt(newRate))) {
+            if (dao.getValidation().validateGrade(Integer.parseInt(newRate))) {
                 objectRateFld.getStyleClass().removeAll("poljeNijeIspravno");
                 objectRateFld.getStyleClass().add("poljeIspravno");
             } else {
@@ -54,8 +54,8 @@ public class RateObjectController {
     }
 
     public void goToProfil(ActionEvent actionEvent) {
-        UserAccountModel model = new UserAccountModel();
-        UserAccountController ctrl = new UserAccountController(model);
+        FitpassDAO dao = FitpassDAO.getInstance();
+        UserAccountController ctrl = new UserAccountController(dao);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"));
         loader.setController(ctrl);
