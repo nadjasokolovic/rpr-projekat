@@ -5,9 +5,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.*;
 import java.util.*;
 
 public class FitpassDAO {
@@ -24,18 +24,65 @@ public class FitpassDAO {
     private static FitpassDAO instance = null;
 
     //ovdje cemo pisati sve PreparedStatement-e
+    private PreparedStatement probniUpit;
+
 
     private Connection conn;
 
     private FitpassDAO() {
         try {
-            //pokusaj konekcije
             conn = DriverManager.getConnection("jdbc:sqlite:baza.db");
-            //ovdje u posebnom try bloku treba probati izvrsiti neki upit
-            //ako taj upit ne uspije u catch bloku kreiramo bazu i napunimo je defaultnim podacima
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        try {
+            probniUpit = conn.prepareStatement("SELECT * FROM osoba");
+        }catch (SQLException e) {
+            e.printStackTrace();
+            //ako je ovaj upit bacio izuzetak potrebno je bazu napuniti defaultnim podacima
+
+            System.out.println("Pozivam regenerisi");
+            regenerisiBazu();
+        }
+    }
+
+    private void regenerisiBazu() {
+        Scanner ulaz = null;
+        try {
+            ulaz = new Scanner(new FileInputStream("baza.db.sql"));
+            String sqlUpit = "";
+            while (ulaz.hasNext()) {
+                sqlUpit += ulaz.nextLine();
+                if ( sqlUpit.length() > 1 && sqlUpit.charAt( sqlUpit.length()-1 ) == ';') {
+                    try {
+                        Statement stmt = conn.createStatement();
+                        stmt.execute(sqlUpit);
+                        sqlUpit = "";
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            ulaz.close();
+            System.out.println("Baza kreirana");
+        } catch (FileNotFoundException e) {
+            System.out.println("Ne postoji SQL datoteka… nastavljam sa praznom bazom");
+        }
+    }
+
+    public String osobeIzBaze() {
+        String s = "";
+        try {
+            probniUpit = conn.prepareStatement("SELECT ime FROM osoba");
+            ResultSet res = probniUpit.executeQuery();
+            while (res.next()) {
+                s += res.getString(1) + "\n";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return s;
     }
 
     private ObservableList<User> users = FXCollections.observableArrayList();

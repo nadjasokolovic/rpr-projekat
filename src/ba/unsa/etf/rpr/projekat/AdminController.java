@@ -36,7 +36,6 @@ public class AdminController {
     public Button deleteDisciplineBtn;
     public Button addDisciplineBtn;
 
-    AdminModel model;
     private FitpassDAO dao = FitpassDAO.getInstance();
 
     public AdminController(FitpassDAO dao) {

@@ -6,8 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Main extends Application {
-    @Override
+public class Main /*extends Application*/ {
+    /*@Override
     public void start(Stage primaryStage) throws Exception{
         FitpassDAO dao = FitpassDAO.getInstance();
         LoginController ctrl = new LoginController(dao);
@@ -22,6 +22,11 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }*/
+    public static void main(String[] args) {
+        // write your code here
+        FitpassDAO dao = FitpassDAO.getInstance();
+        System.out.println(dao.osobeIzBaze());
     }
 
 }
