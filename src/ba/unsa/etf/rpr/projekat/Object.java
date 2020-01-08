@@ -3,22 +3,27 @@ package ba.unsa.etf.rpr.projekat;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
+
 import java.util.TreeSet;
 
 public class Object {
     private SimpleStringProperty name = new SimpleStringProperty();
-    private SimpleStringProperty location = new SimpleStringProperty();
-    private ObservableMap<String, TreeSet<Training>> trainingSchedule = FXCollections.observableHashMap();
-    //treninzi ce biti sortirani po vremenu pocetka od onog sto najranije pocinje do onog koji najkasnije pocinje
+    private SimpleStringProperty municipality = new SimpleStringProperty(); //moci ce se sortirati objekti po opcinama
+    private SimpleStringProperty adress = new SimpleStringProperty();
+    private ObservableSet<Training> trainingSchedule = FXCollections.observableSet();
+    //treninzi ce biti sortirani po vremenu pocetka od onog sto najranije pocinje do onog koji najkasnije pocinje, MOZDA NECE
+    //u ovaj skup ce se ucitavati iz baze treninzi za konkretan dan
 
     private int[] gradesFromUsers = new int[10000];
     private int numberOfGrades = 0;
 
     public Object() {}
 
-    public Object(String name, String location) {
+    public Object(String name, String municipality, String adress) {
         this.name = new SimpleStringProperty(name);
-        this.location = new SimpleStringProperty(location);
+        this.municipality = new SimpleStringProperty(municipality);
+        this.adress = new SimpleStringProperty(adress);
         //bit ce potrebno citati termine iz baze i dodavati ih jedan po jedan u mapu
     }
 
@@ -34,23 +39,35 @@ public class Object {
         this.name.set(name);
     }
 
-    public String getLocation() {
-        return location.get();
+    public String getMunicipality() {
+        return municipality.get();
     }
 
-    public SimpleStringProperty locationProperty() {
-        return location;
+    public SimpleStringProperty municipalityProperty() {
+        return municipality;
     }
 
-    public void setLocation(String location) {
-        this.location.set(location);
+    public void setMunicipality(String municipality) {
+        this.municipality.set(municipality);
     }
 
-    public ObservableMap<String, TreeSet<Training>> getTrainingSchedule() {
+    public String getAdress() {
+        return adress.get();
+    }
+
+    public SimpleStringProperty adressProperty() {
+        return adress;
+    }
+
+    public void setAdress(String adress) {
+        this.adress.set(adress);
+    }
+
+    public ObservableSet<Training> getTrainingSchedule() {
         return trainingSchedule;
     }
 
-    public void setTrainingSchedule(ObservableMap<String, TreeSet<Training>> trainingSchedule) {
+    public void setTrainingSchedule(ObservableSet<Training> trainingSchedule) {
         this.trainingSchedule = trainingSchedule;
     }
 
