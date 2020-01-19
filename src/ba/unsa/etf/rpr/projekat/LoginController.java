@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 public class LoginController {
@@ -19,6 +21,8 @@ public class LoginController {
     public Hyperlink changePasswordUrl;
     public Button loginBtn;
     public Button signupBtn;
+    public Button bsBtn;
+    public Button usBtn;
 
     FitpassDAO dao = FitpassDAO.getInstance();
 
@@ -59,7 +63,9 @@ public class LoginController {
                 if (adminCheckbox.isSelected()) {
                     FitpassDAO dao = FitpassDAO.getInstance();
                     AdminController ctrl = new AdminController(dao);
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin.fxml"));
+
+                    ResourceBundle bundle = ResourceBundle.getBundle("Translation");
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin.fxml"), bundle);
                     loader.setController(ctrl);
                     Parent root = loader.load();
                     myStage.setTitle("Fitpass Sarajevo");
@@ -69,7 +75,8 @@ public class LoginController {
                 else {
                     FitpassDAO dao = FitpassDAO.getInstance();
                     UserController ctrl = new UserController(dao);
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user.fxml"));
+                    ResourceBundle bundle = ResourceBundle.getBundle("Translation");
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user.fxml"), bundle);
                     loader.setController(ctrl);
                     Parent root = loader.load();
                     myStage.setTitle("Fitpass Sarajevo");
@@ -97,7 +104,9 @@ public class LoginController {
         Stage myStage = new Stage();
         FitpassDAO dao = FitpassDAO.getInstance();
         SignupController ctrl = new SignupController(dao);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/signup.fxml"));
+
+        ResourceBundle bundle = ResourceBundle.getBundle("Translation");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/signup.fxml"), bundle);
         loader.setController(ctrl);
         Parent root = null;
         try {
@@ -114,7 +123,9 @@ public class LoginController {
         Stage myStage = new Stage();
         FitpassDAO dao = FitpassDAO.getInstance();
         ChangePasswordController ctrl = new ChangePasswordController(dao);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/changePassword.fxml"));
+
+        ResourceBundle bundle = ResourceBundle.getBundle("Translation");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/changePassword.fxml"), bundle);
         loader.setController(ctrl);
         Parent root = null;
         try {
@@ -124,6 +135,38 @@ public class LoginController {
         }
         myStage.setTitle("Fitpass Sarajevo");
         myStage.setScene(new Scene(root, 700, 500));
+        myStage.show();
+    }
+
+    public void setBosnian(ActionEvent actionEvent) {
+        Locale.setDefault(new Locale("bs", "BA"));
+        Stage myStage = (Stage) usernameFld.getScene().getWindow();
+        ResourceBundle bundle = ResourceBundle.getBundle("Translation_bs");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"), bundle);
+        loader.setController(new LoginController(this.dao));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        myStage.setScene(new Scene(root, PopupControl.USE_COMPUTED_SIZE, PopupControl.USE_COMPUTED_SIZE));
+        myStage.show();
+    }
+
+    public void setEnglish(ActionEvent actionEvent) {
+        Locale.setDefault(new Locale("en", "US"));
+        Stage myStage = (Stage) usernameFld.getScene().getWindow();
+        ResourceBundle bundle = ResourceBundle.getBundle("Translation_en_US");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"), bundle);
+        loader.setController(new LoginController(this.dao));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        myStage.setScene(new Scene(root, PopupControl.USE_COMPUTED_SIZE, PopupControl.USE_COMPUTED_SIZE));
         myStage.show();
     }
 }

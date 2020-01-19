@@ -52,18 +52,18 @@
                   <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                <children>
-                  <Label text="Ime:" GridPane.columnIndex="1" />
-                  <Label text="Prezime:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Username:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label text="Password:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Potvrdite password:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label text="%ime" GridPane.columnIndex="1" />
+                  <Label text="%prezime" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="%username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label text="%password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label text="%passwordPotvrda" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <PasswordField fx:id="passwordFld" styleClass="passwordFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                   <PasswordField fx:id="passwordRepeatFld" styleClass="passwordRepeatFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                   <TextField fx:id="namefld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" />
                   <TextField fx:id="surnameFld" styleClass="surnameFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <TextField fx:id="usernameFld" styleClass="usernameFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <Button fx:id="createAccountBtn" mnemonicParsing="false" onAction="#createAccount" styleClass="createAccountBtn" stylesheets="@../css/style.css" text="Potvrdi" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-                  <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#closeWindow" styleClass="exitBtn" stylesheets="@../css/style.css" text="Odustani" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                  <Button fx:id="createAccountBtn" mnemonicParsing="false" onAction="#createAccount" styleClass="createAccountBtn" stylesheets="@../css/style.css" text="%potvrdi" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                  <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#closeWindow" styleClass="exitBtn" stylesheets="@../css/style.css" text="%odustani" GridPane.columnIndex="2" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets left="70.0" />
                      </GridPane.margin></Button>

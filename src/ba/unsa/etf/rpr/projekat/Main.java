@@ -6,13 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.ResourceBundle;
+
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         FitpassDAO dao = FitpassDAO.getInstance();
         LoginController ctrl = new LoginController(dao);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+        ResourceBundle bundle = ResourceBundle.getBundle("Translation");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"), bundle);
         loader.setController(ctrl);
         Parent root = loader.load();
         primaryStage.setTitle("Fitpass Sarajevo");

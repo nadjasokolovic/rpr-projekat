@@ -34,3 +34,19 @@
 .poljeNijeIspravno {
     -fx-control-inner-background: lightpink;
 }
+
+.bsBtn {
+    -fx-background-image: url("/images/bs_flag.jpg");
+    -fx-background-color: #ffe6b3;
+    -fx-background-size: 30px 16px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.usBtn {
+    -fx-background-image: url("/images/us_flag.jpg");
+    -fx-background-color: #ffe6b3;
+    -fx-background-size: 30px 16px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}

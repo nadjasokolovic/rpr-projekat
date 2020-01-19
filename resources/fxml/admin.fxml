@@ -65,7 +65,7 @@
                <children>
                   <TabPane fx:id="adminTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                      <Tab text="Korisnici">
+                      <Tab text="%korisnici">
                            <content>
                               <GridPane>
                                 <columnConstraints>
@@ -96,29 +96,35 @@
                                           <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <Label text="Ime: " GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <Label text="%ime" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                                              <GridPane.margin>
-                                                <Insets right="40.0" />
+                                                <Insets left="10.0" />
                                              </GridPane.margin>
                                           </Label>
-                                          <Label text="Prezime: " GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                          <Label text="%prezime" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                                              <GridPane.margin>
-                                                <Insets right="11.0" />
+                                                <Insets left="10.0" />
                                              </GridPane.margin>
                                           </Label>
-                                          <Label text="Username: " GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                                          <Label text="Password: " GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                                          <Label text="%username" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin></Label>
+                                          <Label text="%password" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin></Label>
                                           <TextField fx:id="nameFld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                           <TextField fx:id="surnameFld" styleClass="surnameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                           <TextField fx:id="usernameFld" styleClass="usernameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                          <Button fx:id="checkActivityBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#checkActivity" prefHeight="31.0" styleClass="checkActivityBtn" stylesheets="@../css/style.css" text="  Provjeri aktivnost  " GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-                                          <Button fx:id="membershipFeeBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#extendMembershipFee" prefHeight="31.0" styleClass="membershipFeeBtn" stylesheets="@../css/style.css" text="Evidentiraj članarinu" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+                                          <Button fx:id="checkActivityBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#checkActivity" prefHeight="31.0" styleClass="checkActivityBtn" stylesheets="@../css/style.css" text="%aktivnost" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                                          <Button fx:id="membershipFeeBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#extendMembershipFee" prefHeight="31.0" styleClass="membershipFeeBtn" stylesheets="@../css/style.css" text="%clanarina" GridPane.columnSpan="2" GridPane.rowIndex="6" />
                                           <PasswordField fx:id="passwordFld" styleClass="passwordFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                           <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                             <buttons>
-                                              <Button fx:id="addUserBtn" mnemonicParsing="false" onAction="#addUser" styleClass="addBtn" stylesheets="@../css/style.css" text="Dodaj" />
-                                                <Button fx:id="editUserBtn" mnemonicParsing="false" onAction="#editUser" styleClass="editBtn" stylesheets="@../css/style.css" text="Uredi" />
-                                                <Button fx:id="deleteUserBtn" mnemonicParsing="false" onAction="#deleteUser" styleClass="deleteBtn" stylesheets="@../css/style.css" text="Obriši" />
+                                              <Button fx:id="addUserBtn" mnemonicParsing="false" onAction="#addUser" styleClass="addBtn" stylesheets="@../css/style.css" text="%dodaj" />
+                                                <Button fx:id="editUserBtn" mnemonicParsing="false" onAction="#editUser" styleClass="editBtn" stylesheets="@../css/style.css" text="%uredi" />
+                                                <Button fx:id="deleteUserBtn" mnemonicParsing="false" onAction="#deleteUser" styleClass="deleteBtn" stylesheets="@../css/style.css" text="%obrisi" />
                                             </buttons>
                                              <GridPane.margin>
                                                 <Insets right="30.0" />
@@ -129,7 +135,7 @@
                                  </children>
                               </GridPane>
                            </content></Tab>
-                      <Tab text="Objekti">
+                      <Tab text="%objekti">
                         <content>
                             <GridPane>
                                 <columnConstraints>
@@ -158,25 +164,28 @@
                                           <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                         </rowConstraints>
                                         <children>
-                                            <Label text="Naziv: " GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                                            <Label text="%naziv" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                                                 <GridPane.margin>
-                                                    <Insets right="40.0" />
+                                                    <Insets left="10.0" />
                                                 </GridPane.margin>
                                             </Label>
-                                            <Label text="Lokacija: " GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                                            <Label text="%lokacija" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                                                 <GridPane.margin>
-                                                    <Insets />
+                                                    <Insets left="10.0" />
                                                 </GridPane.margin>
                                             </Label>
-                                            <Label text="Prosječna ocjena: " GridPane.halignment="LEFT" GridPane.rowIndex="3" />
+                                            <Label text="%ocjena" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                                             <GridPane.margin>
+                                                <Insets left="10.0" />
+                                             </GridPane.margin></Label>
                                             <TextField fx:id="objectNameFld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                             <TextField fx:id="objectLocationFld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                             <TextField fx:id="objectRateFld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                           <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="4">
                                             <buttons>
-                                              <Button fx:id="addObjectBtn" mnemonicParsing="false" onAction="#addObject" styleClass="addBtn" stylesheets="@../css/style.css" text="Dodaj" />
-                                                <Button fx:id="editObjectBtn" mnemonicParsing="false" onAction="#editObject" styleClass="editBtn" stylesheets="@../css/style.css" text="Uredi" />
-                                                <Button fx:id="deleteObjectBtn" mnemonicParsing="false" onAction="#deleteObject" styleClass="deleteBtn" stylesheets="@../css/style.css" text="Obriši" />
+                                              <Button fx:id="addObjectBtn" mnemonicParsing="false" onAction="#addObject" styleClass="addBtn" stylesheets="@../css/style.css" text="%dodaj" />
+                                                <Button fx:id="editObjectBtn" mnemonicParsing="false" onAction="#editObject" styleClass="editBtn" stylesheets="@../css/style.css" text="%uredi" />
+                                                <Button fx:id="deleteObjectBtn" mnemonicParsing="false" onAction="#deleteObject" styleClass="deleteBtn" stylesheets="@../css/style.css" text="%obrisi" />
                                             </buttons>
                                              <GridPane.margin>
                                                 <Insets right="25.0" />
@@ -187,7 +196,7 @@
                                 </children>
                             </GridPane>
                         </content></Tab>
-                        <Tab text="Discipline">
+                        <Tab text="%discipline">
                             <content>
                                 <GridPane>
                                     <columnConstraints>
@@ -214,18 +223,18 @@
                                                 <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <Label text="Naziv: " GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                                                <Label text="%naziv" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                                                     <GridPane.margin>
                                                         <Insets />
                                                     </GridPane.margin>
                                                 </Label>
                                                 <TextField fx:id="disciplineNameFld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Button fx:id="deleteDisciplineBtn" mnemonicParsing="false" onAction="#deleteDiscipline" styleClass="deleteDisciplineBtn" stylesheets="@../css/style.css" text="Obriši" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                                <Button fx:id="deleteDisciplineBtn" mnemonicParsing="false" onAction="#deleteDiscipline" styleClass="deleteDisciplineBtn" stylesheets="@../css/style.css" text="%obrisi" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                                                     <GridPane.margin>
                                                         <Insets right="5.0" />
                                                     </GridPane.margin>
                                                 </Button>
-                                                <Button fx:id="addDisciplineBtn" mnemonicParsing="false" onAction="#addDiscipline" styleClass="addDisciplineBtn" stylesheets="@../css/style.css" text="Dodaj" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                <Button fx:id="addDisciplineBtn" mnemonicParsing="false" onAction="#addDiscipline" styleClass="addDisciplineBtn" stylesheets="@../css/style.css" text="%dodaj" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                     <GridPane.margin>
                                                         <Insets left="5.0" />
                                                     </GridPane.margin>
@@ -236,7 +245,7 @@
                                 </GridPane>
                             </content>
                         </Tab>
-                        <Tab text="Rezervisani termini">
+                        <Tab text="%termini">
                            <content>
                               <GridPane>
                                 <columnConstraints>

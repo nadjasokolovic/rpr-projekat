@@ -11,6 +11,7 @@ import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class ChangePasswordController {
 
@@ -59,7 +60,8 @@ public class ChangePasswordController {
         FitpassDAO dao = FitpassDAO.getInstance();
         UserAccountController ctrl = new UserAccountController(dao);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"));
+        ResourceBundle bundle = ResourceBundle.getBundle("Translation");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"), bundle);
         loader.setController(ctrl);
         Stage myStage = new Stage();
         Parent root = null;

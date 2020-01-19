@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class UserAccountController {
     FitpassDAO dao = FitpassDAO.getInstance();
@@ -19,7 +20,8 @@ public class UserAccountController {
         FitpassDAO dao = FitpassDAO.getInstance();
         SignupController ctrl = new SignupController(dao);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/signup.fxml"));
+        ResourceBundle bundle = ResourceBundle.getBundle("Translation");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/signup.fxml"), bundle);
         loader.setController(ctrl);
         Stage myStage = new Stage();
         Parent root = null;
@@ -37,7 +39,8 @@ public class UserAccountController {
         FitpassDAO dao = FitpassDAO.getInstance();
         RateObjectController ctrl = new RateObjectController(dao);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/rateObject.fxml"));
+        ResourceBundle bundle = ResourceBundle.getBundle("Translation");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/rateObject.fxml"), bundle);
         loader.setController(ctrl);
         Stage myStage = new Stage();
         Parent root = null;
