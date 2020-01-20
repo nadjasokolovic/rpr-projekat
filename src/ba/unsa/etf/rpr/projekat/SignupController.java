@@ -3,10 +3,10 @@ package ba.unsa.etf.rpr.projekat;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 public class SignupController {
 
@@ -86,11 +86,48 @@ public class SignupController {
     }
 
     public void createAccount(ActionEvent actionEvent) {
-        //upisati novog korisnika u bazu
+        //treba prvo provjeriti da li je username vec zauzet, ako jeste staviti da nije validan i prikazati alert
+        if(dao.checkUsername(usernameFld.getText())) {
+            //otvaranje upozorenja da je username vec zauzet
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Greška!");
+            alert.setHeaderText("Izabrani username se već koristi!");
+            alert.setContentText("Ponovite Vaš unos.");
+            alert.showAndWait();
 
-        Node n = (Node) actionEvent.getSource();
-        Stage stage = (Stage) n.getScene().getWindow();
-        stage.close();
+            usernameFld.setText("");
+        }
+        //upisati novog korisnika u bazu ako su sva polja validna
+        else if(dao.getValidation().validateNameAndSurname(namefld.getText()) && dao.getValidation().validateNameAndSurname(surnameFld.getText()) &&
+           dao.getValidation().validateUsername(usernameFld.getText()) && dao.getValidation().validatePassword(passwordFld.getText())) {
+
+            dao.addUser(namefld.getText(), surnameFld.getText(), usernameFld.getText(), passwordFld.getText());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("");
+            alert.setHeaderText("Uspješno ste kreirali Vaš račun!");
+            alert.setContentText("");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get() == ButtonType.OK) {
+                Node n = (Node) actionEvent.getSource();
+                Stage stage = (Stage) n.getScene().getWindow();
+                stage.close();
+            }
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Greška!");
+            alert.setHeaderText("Neispravni podaci!");
+            alert.setContentText("Ponovite Vaš unos.");
+            alert.showAndWait();
+
+            //restartujemo polja za unos
+            namefld.setText("");
+            surnameFld.setText("");
+            usernameFld.setText("");
+            passwordFld.setText("");
+            passwordRepeatFld.setText("");
+        }
 
     }
 

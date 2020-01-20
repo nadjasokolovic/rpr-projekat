@@ -52,13 +52,12 @@ public class LoginController {
                 passwordFld.getStyleClass().add("poljeNijeIspravno");
             }
         });
-
     }
 
         public void loginAction(ActionEvent actionEvent) {
         Stage myStage = new Stage();
         //prilikom klika na dugme potrebno je provjeriti da li username i password pripadaju korisniku
-        if(dao.getValidation().validate(usernameFld.getText(), passwordFld.getText())) {
+        if(dao.checkUser(usernameFld.getText(), passwordFld.getText())) {
             try {
                 if (adminCheckbox.isSelected()) {
                     FitpassDAO dao = FitpassDAO.getInstance();

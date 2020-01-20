@@ -6,17 +6,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ChangePasswordController {
 
     public PasswordField passwordFld;
     public PasswordField passwordRepeatFld;
+    public TextField usernameFld;
     public Button confirmBtn;
 
     FitpassDAO dao = FitpassDAO.getInstance();
@@ -77,8 +78,34 @@ public class ChangePasswordController {
 
     public void rememberNewPassword(ActionEvent actionEvent) {
         //azurirati password korisniku
-        Node n = (Node) actionEvent.getSource();
-        Stage stage = (Stage) n.getScene().getWindow();
-        stage.close();
+        //password se azurira na osnovu username koji je potrebno unijeti, u bazi je username unique pa ce to garantovati da se password azurira pravom korisniku
+        if(dao.getValidation().validateUsername(usernameFld.getText()) && dao.getValidation().validatePassword(passwordFld.getText()))
+            dao.updatePassword(usernameFld.getText(), passwordFld.getText());
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Greška!");
+            alert.setHeaderText("Neispravni podaci!");
+            alert.setContentText("Ponovite Vaš unos.");
+            alert.showAndWait();
+
+            usernameFld.setText("");
+            passwordFld.setText("");
+            passwordRepeatFld.setText("");
+        }
+
+        if(dao.getPasswordForUsername(usernameFld.getText()).equals(passwordFld.getText())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Promjena lozinke");
+            alert.setHeaderText("Uspješno ste promijenili lozinku!");
+            alert.setContentText("");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Node n = (Node) actionEvent.getSource();
+                Stage stage = (Stage) n.getScene().getWindow();
+                stage.close();
+            }
+        }
+
     }
 }

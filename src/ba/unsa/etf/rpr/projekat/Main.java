@@ -6,14 +6,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
+        //postavljanje bosanskog kao defaultnog jezika
+        Locale.setDefault(new Locale("bs", "BA"));
+
         FitpassDAO dao = FitpassDAO.getInstance();
         LoginController ctrl = new LoginController(dao);
-
         ResourceBundle bundle = ResourceBundle.getBundle("Translation");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"), bundle);
         loader.setController(ctrl);

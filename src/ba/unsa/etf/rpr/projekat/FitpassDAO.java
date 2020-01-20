@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
+import javafx.scene.control.Alert;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,7 +25,8 @@ public class FitpassDAO {
     private static FitpassDAO instance = null;
 
     //ovdje cemo pisati sve PreparedStatement-e
-    private PreparedStatement probniUpit;
+    private PreparedStatement probniUpit, provjeraKorisnikaUpit, dodajOsobuUpit, dodajKorisnikaUpit, maxOsobaIDUpit, maxKorisnikIDUpit, provjraUsernameUpit;
+    private PreparedStatement azurirajPasswordUpit, dajKorisnikaUpit;
 
 
     private Connection conn;
@@ -43,6 +45,20 @@ public class FitpassDAO {
 
             System.out.println("Pozivam regenerisi");
             regenerisiBazu();
+        }
+
+        try {
+            provjeraKorisnikaUpit = conn.prepareStatement("SELECT o.osoba_id FROM osoba o WHERE o.username=? AND o.password=?");
+            dodajOsobuUpit = conn.prepareStatement("INSERT INTO osoba VALUES(?,?,?,?,?,?)");
+            maxOsobaIDUpit = conn.prepareStatement("SELECT MAX(osoba_id)+1 FROM osoba");
+            dodajKorisnikaUpit = conn.prepareStatement("INSERT INTO korisnik VALUES(?,?,?,?,?,?,?)");
+            maxKorisnikIDUpit = conn.prepareStatement("SELECT MAX(korisnik_id)+1 FROM korisnik");
+            provjraUsernameUpit = conn.prepareStatement("SELECT o.osoba_id FROM osoba o WHERE o.username=?");
+            azurirajPasswordUpit = conn.prepareStatement("UPDATE osoba SET password=? WHERE osoba_id=?");
+            dajKorisnikaUpit = conn.prepareStatement("SELECT o.password FROM osoba o WHERE o.username=?");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -106,5 +122,140 @@ public class FitpassDAO {
             }
         }
         instance = null;
+    }
+
+    private int getPersonId() {
+        try {
+            ResultSet result = maxOsobaIDUpit.executeQuery();
+            if(result.next()) {
+                return result.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; //nikada nece vratiti
+    }
+
+    private int getUserId() {
+        try {
+            ResultSet result = maxKorisnikIDUpit.executeQuery();
+            if(result.next()) {
+                return result.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; //nikada nece vratiti
+    }
+
+    private int getIdForUsername(String username) {
+        try {
+            provjraUsernameUpit.setString(1, username);
+            ResultSet rs = provjraUsernameUpit.executeQuery();
+            if(rs.next())
+                return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  -1; //ako ne postoji taj username
+    }
+
+    public String getPasswordForUsername(String username) {
+        try {
+            dajKorisnikaUpit.setString(1, username);
+            ResultSet rs = dajKorisnikaUpit.executeQuery();
+            if(rs.next())
+                return rs.getString(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    public boolean checkUser(String username, String password) {
+        //potrebno je da u bazi pronadje korisnika i ako nisu njegovi podaci da mu onemoguci prijavu na aplikaciju
+        try {
+            provjeraKorisnikaUpit.setString(1, username);
+            provjeraKorisnikaUpit.setString(2, password);
+
+            ResultSet result = provjeraKorisnikaUpit.executeQuery();
+            if(result.next())
+                return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void addUser(String name, String surname, String username, String password) {
+        //prvo upisuje u tabelu osoba
+        try {
+            int personId = getPersonId();
+
+            dodajOsobuUpit.setInt(1, personId);
+            dodajOsobuUpit.setString(2, name);
+            dodajOsobuUpit.setString(3, surname);
+            dodajOsobuUpit.setString(4, username);
+            dodajOsobuUpit.setString(5, password);
+            dodajOsobuUpit.setString(6, "korisnik");
+
+            dodajOsobuUpit.executeUpdate();
+
+            //sada je potrebno dodati i u tabelu korisnik
+            dodajKorisnikaUpit.setInt(1, getUserId());
+            dodajKorisnikaUpit.setInt(2, personId);
+            //ostale parametre cu postaviti na null jer prilikom kreiranja racuna ne treba imati postavljenu clanarinu ili rezervisane termine
+            //ti podaci ce se naknadno azurirati
+            dodajKorisnikaUpit.setString(3, null);
+            dodajKorisnikaUpit.setString(4, null);
+            dodajKorisnikaUpit.setInt(5, 0);
+            dodajKorisnikaUpit.setInt(6, 0);
+            dodajKorisnikaUpit.setInt(7, 0);
+
+            dodajKorisnikaUpit.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public boolean checkUsername(String username) {
+        try {
+            provjraUsernameUpit.setString(1, username);
+            ResultSet result = provjraUsernameUpit.executeQuery();
+            if(result.next())
+                return true; //znaci da je taj username vec zauzet
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public void updatePassword(String username, String newPassword) {
+        try {
+            int id = getIdForUsername(username);
+            if(id == -1) {
+                //ako nema tog korisnika u bazi
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Greška!");
+                alert.setHeaderText("Neispravno koričko ime!");
+                alert.setContentText("Ponovite Vaš unos.");
+                alert.showAndWait();
+            }
+            else {
+                azurirajPasswordUpit.setString(1, newPassword);
+                azurirajPasswordUpit.setInt(2, id);
+                azurirajPasswordUpit.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
