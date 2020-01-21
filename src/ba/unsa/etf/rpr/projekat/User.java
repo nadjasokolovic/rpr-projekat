@@ -8,7 +8,16 @@ import javafx.collections.ObservableList;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class User extends Person {
+public class User extends Person implements Comparable<User> {
+
+    @Override
+    public int compareTo(User user) {
+        if(!this.getName().equals(user.getName()))
+            return this.getName().compareTo(user.getName());
+
+        return this.getSurname().compareTo(user.getSurname());
+    }
+
     private enum Months {
         JANUAR(),
         FEBRUAR(),
@@ -56,6 +65,12 @@ public class User extends Person {
         this.numberOfUsedTrainings = new SimpleIntegerProperty(numberOfUsedTrainings);
         this.activity = FXCollections.observableArrayList(activity);
 
+    }
+
+    public User(){}
+
+    public User(String name, String surname, String username, String password) {
+        super(name, surname, username, password);
     }
 
     public ObservableList<String> getNotifications() {
@@ -121,4 +136,6 @@ public class User extends Person {
     public void setActivity(ObservableList<Months> activity) {
         this.activity = activity;
     }
+
+
 }

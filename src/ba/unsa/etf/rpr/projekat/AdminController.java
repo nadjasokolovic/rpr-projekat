@@ -1,14 +1,15 @@
 package ba.unsa.etf.rpr.projekat;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,18 +27,63 @@ public class AdminController {
     public Button checkActivityBtn;
     public Button membershipFeeBtn;
     public PasswordField passwordFld;
+
+    public ListView usersList;
     //tab objekti
     public TextField objectNameFld;
-    public TextField objectLocationFld;
+    public TextField objectMunicipalityFld;
+    public TextField objectAdressFld;
     public TextField objectRateFld;
     public Button deleteObjectBtn;
     public Button addObjectBtn;
+
+    public ListView objectsList;
     //tab discipline
     public TextField disciplineNameFld;
     public Button deleteDisciplineBtn;
     public Button addDisciplineBtn;
 
+    public ListView disciplineList;
+
+    //tab termini
+    public ListView trainingsList;
+
     private FitpassDAO dao = FitpassDAO.getInstance();
+
+    //skup u koji ce se ucitavati svi korisnici iz baze i prikazivati u listView-u u tabu korisnici
+    private ObservableList<User> users = FXCollections.observableArrayList();
+    private ObservableList<Object> objects = FXCollections.observableArrayList();
+
+    //trenutno izabrane vrijednost u listView-u
+    private SimpleObjectProperty<User> user = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<Object> object = new SimpleObjectProperty<>();
+
+    public User getUser() {
+        return user.get();
+    }
+
+    public SimpleObjectProperty<User> userProperty() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user.set(user);
+    }
+
+    public Object getObject() {
+        return object.get();
+    }
+
+    public SimpleObjectProperty<Object> objectProperty() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object.set(object);
+    }
+
+    //sluze za provjeru da li je cijela forma validna
+    private boolean okUser = true;
 
     public AdminController(FitpassDAO dao) {
         this.dao = dao;
@@ -45,13 +91,73 @@ public class AdminController {
 
     @FXML
     public void initialize() {
+        //popunjavamo podacima sve kolekcije koje sluze za prikaz podataka
+        usersList.setItems(FXCollections.observableArrayList(dao.getAllUsers()));
+        objectsList.setItems(FXCollections.observableArrayList(dao.getAllObjects()));
+
+        //postavljanje trenutno odabrane vrijednosti u listView-u
+        usersList.getSelectionModel().selectedItemProperty().addListener((obs, oldUser, newUser) -> {
+            this.setUser((User)newUser);
+
+            usersList.refresh();
+        });
+
+        objectsList.getSelectionModel().selectedItemProperty().addListener((obs, oldObject, newObject) -> {
+            this.setObject((Object)newObject);
+
+            objectsList.refresh();
+        });
+
+        //bidirectional binding za sva polja
+        userProperty().addListener((obs, oldUser, newUser) -> {
+            if (oldUser != null) {
+                nameFld.textProperty().unbindBidirectional(oldUser.nameProperty());
+                surnameFld.textProperty().unbindBidirectional(oldUser.surnameProperty());
+                usernameFld.textProperty().unbindBidirectional(oldUser.usernameProperty());
+                passwordFld.textProperty().unbindBidirectional(oldUser.passwordProperty());
+            }
+            if (newUser == null) {
+                nameFld.setText("");
+                surnameFld.setText("");
+                usernameFld.setText("");
+                passwordFld.setText("");
+            }
+            else {
+                nameFld.textProperty().bindBidirectional(newUser.nameProperty());
+                surnameFld.textProperty().bindBidirectional(newUser.surnameProperty());
+                usernameFld.textProperty().bindBidirectional(newUser.usernameProperty());
+                passwordFld.textProperty().bindBidirectional(newUser.passwordProperty());
+            }
+        });
+
+        objectProperty().addListener((obs, oldObject, newObject) -> {
+            if (oldObject != null) {
+                objectNameFld.textProperty().unbindBidirectional(oldObject.nameProperty());
+                objectMunicipalityFld.textProperty().unbindBidirectional(oldObject.municipalityProperty());
+                objectAdressFld.textProperty().unbindBidirectional(oldObject.adressProperty());
+                //objectRateFld.textProperty().unbindBidirectional(oldObject.);
+            }
+            if (newObject == null) {
+                objectNameFld.setText("");
+                objectMunicipalityFld.setText("");
+                objectAdressFld.setText("");
+            }
+            else {
+                objectNameFld.textProperty().bindBidirectional(newObject.nameProperty());
+                objectMunicipalityFld.textProperty().bindBidirectional(newObject.municipalityProperty());
+                objectAdressFld.textProperty().bindBidirectional(newObject.adressProperty());
+            }
+        });
+
         nameFld.textProperty().addListener((obs, oldName, newName) -> {
             if (dao.getValidation().validateNameAndSurname(newName)) {
                 nameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 nameFld.getStyleClass().add("poljeIspravno");
+                this.okUser = true;
             } else {
                 nameFld.getStyleClass().removeAll("poljeIspravno");
                 nameFld.getStyleClass().add("poljeNijeIspravno");
+                this.okUser = false;
             }
         });
 
@@ -59,9 +165,11 @@ public class AdminController {
             if (dao.getValidation().validateNameAndSurname(newSurname)) {
                 surnameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 surnameFld.getStyleClass().add("poljeIspravno");
+                this.okUser = true;
             } else {
                 surnameFld.getStyleClass().removeAll("poljeIspravno");
                 surnameFld.getStyleClass().add("poljeNijeIspravno");
+                this.okUser = false;
             }
         });
 
@@ -69,9 +177,11 @@ public class AdminController {
             if (dao.getValidation().validateUsername(newUsername)) {
                 usernameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 usernameFld.getStyleClass().add("poljeIspravno");
+                this.okUser = true;
             } else {
                 usernameFld.getStyleClass().removeAll("poljeIspravno");
                 usernameFld.getStyleClass().add("poljeNijeIspravno");
+                this.okUser = false;
             }
         });
 
@@ -79,9 +189,11 @@ public class AdminController {
             if (dao.getValidation().validatePassword(newPassword)) {
                 passwordFld.getStyleClass().removeAll("poljeNijeIspravno");
                 passwordFld.getStyleClass().add("poljeIspravno");
+                this.okUser = true;
             } else {
                 passwordFld.getStyleClass().removeAll("poljeIspravno");
                 passwordFld.getStyleClass().add("poljeNijeIspravno");
+                this.okUser = false;
             }
         });
 
@@ -95,13 +207,23 @@ public class AdminController {
             }
         });
 
-        objectLocationFld.textProperty().addListener((obs, oldObjectLocation, newObjectLocation) -> {
+        objectMunicipalityFld.textProperty().addListener((obs, oldObjectLocation, newObjectLocation) -> {
             if (dao.getValidation().validateLocation(newObjectLocation)) {
-                objectLocationFld.getStyleClass().removeAll("poljeNijeIspravno");
-                objectLocationFld.getStyleClass().add("poljeIspravno");
+                objectMunicipalityFld.getStyleClass().removeAll("poljeNijeIspravno");
+                objectMunicipalityFld.getStyleClass().add("poljeIspravno");
             } else {
-                objectLocationFld.getStyleClass().removeAll("poljeIspravno");
-                objectLocationFld.getStyleClass().add("poljeNijeIspravno");
+                objectMunicipalityFld.getStyleClass().removeAll("poljeIspravno");
+                objectMunicipalityFld.getStyleClass().add("poljeNijeIspravno");
+            }
+        });
+
+        objectAdressFld.textProperty().addListener((obs, oldObjectLocation, newObjectLocation) -> {
+            if (dao.getValidation().validateLocation(newObjectLocation)) {
+                objectAdressFld.getStyleClass().removeAll("poljeNijeIspravno");
+                objectAdressFld.getStyleClass().add("poljeIspravno");
+            } else {
+                objectAdressFld.getStyleClass().removeAll("poljeIspravno");
+                objectAdressFld.getStyleClass().add("poljeNijeIspravno");
             }
         });
 
@@ -127,15 +249,48 @@ public class AdminController {
     }
 
     public void addUser(ActionEvent actionEvent) {
-        //treba izbrisati objekat iz baze
+        //treba dodati korisnika u bazu ako je unesen validan korisnik
+        if(okUser) {
+            //treba provjeriti da li username postoji vec u bazi
+            if(!dao.checkUsername(usernameFld.getText())){
+                //ako ne postoji moze se dodati
+                dao.addUser(nameFld.getText(), surnameFld.getText(), usernameFld.getText(), passwordFld.getText());
+
+                usersList.getItems().add(new User(nameFld.getText(), surnameFld.getText(), usernameFld.getText(), passwordFld.getText()));
+            }
+            else {
+                //ako postoji potrebno je obavijestiti admina o neispravnim podacima
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Greška!");
+                alert.setHeaderText("Izabrani username se već koristi!");
+                alert.setContentText("Ponovite Vaš unos.");
+                alert.showAndWait();
+
+                usernameFld.setText("");
+            }
+        }
+
     }
 
     public void editUser(ActionEvent actionEvent) {
-        //treba izbrisati objekat iz baze
+        //treba izmijeniti korisnika u bazi
+        if(this.user != null){
+            //ako postoji trenutno izabrani korisnik
+            User tmp = new User();
+            tmp.setName(nameFld.getText());
+            tmp.setSurname(surnameFld.getText());
+            tmp.setUsername(usernameFld.getText());
+            tmp.setPassword(passwordFld.getText());
+
+            dao.editUser(tmp);
+            this.setUser(tmp);
+            //ovo promijeni u bazi ok
+        }
     }
 
     public void deleteUser(ActionEvent actionEvent) {
-        //treba izbrisati objekat iz baze
+        //treba izbrisati korisnika iz baze
+
     }
 
     public void deleteObject(ActionEvent actionEvent) {

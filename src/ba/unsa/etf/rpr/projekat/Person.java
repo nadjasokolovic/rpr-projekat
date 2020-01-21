@@ -64,4 +64,9 @@ public abstract class Person {
     public void setPassword(String password) {
         this.password.set(password);
     }
+
+    @Override
+    public String toString() {
+        return this.getName() + " " + this.getSurname();
+    }
 }

@@ -26,7 +26,7 @@ public class FitpassDAO {
 
     //ovdje cemo pisati sve PreparedStatement-e
     private PreparedStatement probniUpit, provjeraKorisnikaUpit, dodajOsobuUpit, dodajKorisnikaUpit, maxOsobaIDUpit, maxKorisnikIDUpit, provjraUsernameUpit;
-    private PreparedStatement azurirajPasswordUpit, dajKorisnikaUpit;
+    private PreparedStatement azurirajPasswordUpit, dajKorisnikaUpit, korisniciUpit, izmijeniKorisnika, objektiUpit;
 
 
     private Connection conn;
@@ -56,6 +56,9 @@ public class FitpassDAO {
             provjraUsernameUpit = conn.prepareStatement("SELECT o.osoba_id FROM osoba o WHERE o.username=?");
             azurirajPasswordUpit = conn.prepareStatement("UPDATE osoba SET password=? WHERE osoba_id=?");
             dajKorisnikaUpit = conn.prepareStatement("SELECT o.password FROM osoba o WHERE o.username=?");
+            korisniciUpit = conn.prepareStatement("SELECT * FROM osoba WHERE tip_osobe=?");
+            izmijeniKorisnika = conn.prepareStatement("UPDATE osoba SET ime=?, prezime=?, username=?, password=? WHERE osoba_id=?");
+            objektiUpit = conn.prepareStatement("SELECT * FROM objekat");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -257,5 +260,59 @@ public class FitpassDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Set<User> getAllUsers() {
+        Set<User> users = new TreeSet<>();
+        try {
+            korisniciUpit.setString(1, "korisnik");
+            ResultSet result = korisniciUpit.executeQuery();
+            while (result.next()) {
+                User tmp = new User();
+                tmp.setName(result.getString(2));
+                tmp.setSurname(result.getString(3));
+                tmp.setUsername(result.getString(4));
+                tmp.setPassword(result.getString(5));
+
+                users.add(tmp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    public void editUser(User user) {
+        try {
+            izmijeniKorisnika.setString(1, user.getName());
+            izmijeniKorisnika.setString(2, user.getSurname());
+            izmijeniKorisnika.setString(3, user.getUsername());
+            izmijeniKorisnika.setString(4, user.getPassword());
+            int id = getIdForUsername(user.getUsername());
+            if(id != -1)
+                izmijeniKorisnika.setInt(5, id);
+            else
+                return;
+
+            izmijeniKorisnika.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Object> getAllObjects() {
+        ArrayList<Object> objects = new ArrayList<>();
+        try {
+            ResultSet result = objektiUpit.executeQuery();
+            while (result.next()){
+                Object tmp = new Object(result.getString(2), result.getString(4), result.getString(5));
+                objects.add(tmp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return objects;
     }
 }
