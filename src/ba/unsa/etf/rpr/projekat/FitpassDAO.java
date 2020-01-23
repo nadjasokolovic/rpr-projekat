@@ -26,8 +26,8 @@ public class FitpassDAO {
 
     //ovdje cemo pisati sve PreparedStatement-e
     private PreparedStatement probniUpit, provjeraKorisnikaUpit, dodajOsobuUpit, dodajKorisnikaUpit, maxOsobaIDUpit, maxKorisnikIDUpit, provjraUsernameUpit;
-    private PreparedStatement azurirajPasswordUpit, dajKorisnikaUpit, korisniciUpit, izmijeniKorisnika, objektiUpit;
-
+    private PreparedStatement azurirajPasswordUpit, dajKorisnikaUpit, korisniciUpit, izmijeniKorisnika, objektiUpit, idKorisnikaUpit, idAktivnostUpit;
+    private PreparedStatement izbirsiKorisnikAktivnostUpit, izbrisiAktivnostUpit, izbrisiKorisnikaUpit, izbrisiOsobuUpit;
 
     private Connection conn;
 
@@ -59,6 +59,12 @@ public class FitpassDAO {
             korisniciUpit = conn.prepareStatement("SELECT * FROM osoba WHERE tip_osobe=?");
             izmijeniKorisnika = conn.prepareStatement("UPDATE osoba SET ime=?, prezime=?, username=?, password=? WHERE osoba_id=?");
             objektiUpit = conn.prepareStatement("SELECT * FROM objekat");
+            idKorisnikaUpit = conn.prepareStatement("SELECT k.korisnik_id FROM korisnik k WHERE k.osoba_id=?");
+            idAktivnostUpit = conn.prepareStatement("SELECT ka.aktivnost_id FROM korisnik_aktivnost ka WHERE ka.korisnik_id=?");
+            izbirsiKorisnikAktivnostUpit = conn.prepareStatement("DELETE FROM korisnik_aktivnost WHERE korisnik_id=?");
+            izbrisiAktivnostUpit = conn.prepareStatement("DELETE FROM aktivnost WHERE aktivnost_id=?");
+            izbrisiKorisnikaUpit = conn.prepareStatement("DELETE FROM korisnik WHERE korisnik_id=?");
+            izbrisiOsobuUpit = conn.prepareStatement("DELETE FROM osoba WHERE osoba_id=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -153,7 +159,7 @@ public class FitpassDAO {
         return -1; //nikada nece vratiti
     }
 
-    private int getIdForUsername(String username) {
+    public int getIdForUsername(String username) {
         try {
             provjraUsernameUpit.setString(1, username);
             ResultSet rs = provjraUsernameUpit.executeQuery();
@@ -314,5 +320,76 @@ public class FitpassDAO {
         }
 
         return objects;
+    }
+
+    public int getUserIdForPersonId(int id) {
+        try {
+            idKorisnikaUpit.setInt(1, id);
+
+            ResultSet rs = idKorisnikaUpit.executeQuery();
+            if(rs.next())
+                return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; //nece nikad vratiti ovo
+    }
+
+    public int getActivityIdForUserId(int id) {
+        try {
+            idAktivnostUpit.setInt(1, id);
+
+            ResultSet rs = idAktivnostUpit.executeQuery();
+            if(rs.next())
+                return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; //nece nikad vratiti ovo
+    }
+
+
+    public void deleteActivityUser(int userId) {
+        try {
+            izbirsiKorisnikAktivnostUpit.setInt(1, userId);
+
+            izbirsiKorisnikAktivnostUpit.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteActivity(int activityId) {
+        try {
+            izbrisiAktivnostUpit.setInt(1, activityId);
+
+            izbrisiAktivnostUpit.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteUser(int userId) {
+        try {
+            izbrisiKorisnikaUpit.setInt(1, userId);
+
+            izbrisiKorisnikaUpit.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deletePerson(int personId) {
+        try {
+            izbrisiOsobuUpit.setInt(1, personId);
+
+            izbrisiOsobuUpit.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

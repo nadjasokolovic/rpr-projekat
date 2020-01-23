@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AdminController {
@@ -289,8 +290,35 @@ public class AdminController {
     }
 
     public void deleteUser(ActionEvent actionEvent) {
-        //treba izbrisati korisnika iz baze
+        //treba izbrisati trenutnog korisnika iz baze
 
+
+        if(usersList.getSelectionModel().getSelectedItem() != null){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Brisanje grada");
+            String s = "Da li ste sigurni da želite obrisati korisnika: " + this.getUser().getName() + " " + this.getUser().getSurname() + "?";
+            alert.setContentText(s);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                //prvo mi trebaju svi id iz tabela iz kojih cu brisati podatke
+                int idOsobe = dao.getIdForUsername(this.getUser().getUsername());
+                int idKorisnika = dao.getUserIdForPersonId(idOsobe);
+                int idAktivnosti = dao.getActivityIdForUserId(idKorisnika);
+
+                //brisemo prvo iz tabele korisnik_aktivnost sve aktivnosti koje su vezane za trenutnog korisnika
+                dao.deleteActivityUser(idKorisnika);
+                //brisemo u tabeli aktivnost
+                dao.deleteActivity(idAktivnosti);
+                //brisemo iz tabele korisnik
+                dao.deleteUser(idKorisnika);
+                //brisemo iz tabele osoba
+                dao.deletePerson(idOsobe);
+            }
+            //potrebno je odmah korisnika izbaciti iz liste za prikaz
+            usersList.getItems().remove(this.getUser());
+            //da obrisemo selektovano u tableView, tj. da ne ostane selektovan grad iznad onog koji brisemo
+            usersList.getSelectionModel().clearSelection();
+        }
     }
 
     public void deleteObject(ActionEvent actionEvent) {
