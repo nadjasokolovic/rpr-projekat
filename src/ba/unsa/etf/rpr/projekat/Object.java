@@ -1,5 +1,6 @@
 package ba.unsa.etf.rpr.projekat;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
@@ -11,6 +12,7 @@ public class Object {
     private SimpleStringProperty name = new SimpleStringProperty();
     private SimpleStringProperty municipality = new SimpleStringProperty(); //moci ce se sortirati objekti po opcinama
     private SimpleStringProperty adress = new SimpleStringProperty();
+    private SimpleDoubleProperty averageRate = new SimpleDoubleProperty();
     private ObservableSet<Training> trainingSchedule = FXCollections.observableSet();
     //treninzi ce biti sortirani po vremenu pocetka od onog sto najranije pocinje do onog koji najkasnije pocinje, MOZDA NECE
     //u ovaj skup ce se ucitavati iz baze treninzi za konkretan dan
@@ -20,10 +22,11 @@ public class Object {
 
     public Object() {}
 
-    public Object(String name, String municipality, String adress) {
+    public Object(String name, String municipality, String adress, Double averageRate) {
         this.name = new SimpleStringProperty(name);
         this.municipality = new SimpleStringProperty(municipality);
         this.adress = new SimpleStringProperty(adress);
+        this.averageRate = new SimpleDoubleProperty(averageRate);
         //bit ce potrebno citati termine iz baze i dodavati ih jedan po jedan u mapu
     }
 
@@ -85,6 +88,18 @@ public class Object {
 
     public void setNumberOfGrades(int numberOfGrades) {
         this.numberOfGrades = numberOfGrades;
+    }
+
+    public double getAverageRate() {
+        return averageRate.get();
+    }
+
+    public SimpleDoubleProperty averageRateProperty() {
+        return averageRate;
+    }
+
+    public void setAverageRate(double averageRate) {
+        this.averageRate.set(averageRate);
     }
 
     //uraditi hashCode

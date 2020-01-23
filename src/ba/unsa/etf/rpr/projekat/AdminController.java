@@ -1,6 +1,7 @@
 package ba.unsa.etf.rpr.projekat;
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -11,6 +12,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -43,11 +46,13 @@ public class AdminController {
     public TextField disciplineNameFld;
     public Button deleteDisciplineBtn;
     public Button addDisciplineBtn;
+    public ChoiceBox objectChoice;
 
     public ListView disciplineList;
 
     //tab termini
     public ListView trainingsList;
+
 
     private FitpassDAO dao = FitpassDAO.getInstance();
 
@@ -85,6 +90,7 @@ public class AdminController {
 
     //sluze za provjeru da li je cijela forma validna
     private boolean okUser = true;
+    private boolean okObject = true;
 
     public AdminController(FitpassDAO dao) {
         this.dao = dao;
@@ -136,17 +142,20 @@ public class AdminController {
                 objectNameFld.textProperty().unbindBidirectional(oldObject.nameProperty());
                 objectMunicipalityFld.textProperty().unbindBidirectional(oldObject.municipalityProperty());
                 objectAdressFld.textProperty().unbindBidirectional(oldObject.adressProperty());
-                //objectRateFld.textProperty().unbindBidirectional(oldObject.);
+                objectRateFld.textProperty().unbindBidirectional(oldObject.averageRateProperty());
             }
             if (newObject == null) {
                 objectNameFld.setText("");
                 objectMunicipalityFld.setText("");
                 objectAdressFld.setText("");
+                objectRateFld.setText("");
             }
             else {
                 objectNameFld.textProperty().bindBidirectional(newObject.nameProperty());
                 objectMunicipalityFld.textProperty().bindBidirectional(newObject.municipalityProperty());
                 objectAdressFld.textProperty().bindBidirectional(newObject.adressProperty());
+                StringConverter<? extends Number> converter = new DoubleStringConverter();
+                objectRateFld.textProperty().bindBidirectional(newObject.averageRateProperty(), (StringConverter<Number>) converter);
             }
         });
 
@@ -202,9 +211,11 @@ public class AdminController {
             if (dao.getValidation().validateNameOfObject(newObjectName)) {
                 objectNameFld.getStyleClass().removeAll("poljeNijeIspravno");
                 objectNameFld.getStyleClass().add("poljeIspravno");
+                okObject = true;
             } else {
                 objectNameFld.getStyleClass().removeAll("poljeIspravno");
                 objectNameFld.getStyleClass().add("poljeNijeIspravno");
+                okObject = false;
             }
         });
 
@@ -212,9 +223,11 @@ public class AdminController {
             if (dao.getValidation().validateLocation(newObjectLocation)) {
                 objectMunicipalityFld.getStyleClass().removeAll("poljeNijeIspravno");
                 objectMunicipalityFld.getStyleClass().add("poljeIspravno");
+                okObject = true;
             } else {
                 objectMunicipalityFld.getStyleClass().removeAll("poljeIspravno");
                 objectMunicipalityFld.getStyleClass().add("poljeNijeIspravno");
+                okObject = false;
             }
         });
 
@@ -222,21 +235,25 @@ public class AdminController {
             if (dao.getValidation().validateLocation(newObjectLocation)) {
                 objectAdressFld.getStyleClass().removeAll("poljeNijeIspravno");
                 objectAdressFld.getStyleClass().add("poljeIspravno");
+                okObject = true;
             } else {
                 objectAdressFld.getStyleClass().removeAll("poljeIspravno");
                 objectAdressFld.getStyleClass().add("poljeNijeIspravno");
+                okObject = false;
             }
         });
 
-        objectRateFld.textProperty().addListener((obs, oldObjectRate, newObjectRate) -> {
-            if (dao.getValidation().validateGrade(Integer.parseInt(newObjectRate))) {
-                objectRateFld.getStyleClass().removeAll("poljeNijeIspravno");
-                objectRateFld.getStyleClass().add("poljeIspravno");
-            } else {
-                objectRateFld.getStyleClass().removeAll("poljeIspravno");
-                objectRateFld.getStyleClass().add("poljeNijeIspravno");
-            }
-        });
+//        objectRateFld.textProperty().addListener((obs, oldObjectRate, newObjectRate) -> {
+//            if (dao.getValidation().validateGrade(Double.parseDouble(newObjectRate))) {
+//                objectRateFld.getStyleClass().removeAll("poljeNijeIspravno");
+//                objectRateFld.getStyleClass().add("poljeIspravno");
+//                okObject = true;
+//            } else {
+//                objectRateFld.getStyleClass().removeAll("poljeIspravno");
+//                objectRateFld.getStyleClass().add("poljeNijeIspravno");
+//                okObject = false;
+//            }
+//        });
 
         disciplineNameFld.textProperty().addListener((obs, oldDisciplineName, newDisciplineName) -> {
             if (dao.getValidation().validateDiscipline(newDisciplineName)) {
@@ -292,10 +309,9 @@ public class AdminController {
     public void deleteUser(ActionEvent actionEvent) {
         //treba izbrisati trenutnog korisnika iz baze
 
-
         if(usersList.getSelectionModel().getSelectedItem() != null){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Brisanje grada");
+            alert.setTitle("Brisanje korisnika");
             String s = "Da li ste sigurni da želite obrisati korisnika: " + this.getUser().getName() + " " + this.getUser().getSurname() + "?";
             alert.setContentText(s);
             Optional<ButtonType> result = alert.showAndWait();
@@ -323,14 +339,57 @@ public class AdminController {
 
     public void deleteObject(ActionEvent actionEvent) {
         //treba izbrisati objekat iz baze
+        if(objectsList.getSelectionModel().getSelectedItem() != null){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Brisanje objekta");
+            String s = "Da li ste sigurni da želite obrisati objekat: " + this.getObject().getName() + "?";
+            alert.setContentText(s);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                int idObjekta = dao.getObjectIdForNameAndAddress(this.getObject().getName(), this.getObject().getAdress());
+                int idTreninga = dao.getTrainingIdForObject(idObjekta);
+
+                dao.deleteTraining(idTreninga);
+                dao.deleteObjectDiscipline(idObjekta);
+                dao.deleteObject(idObjekta);
+
+            }
+            objectsList.getItems().remove(this.getObject());
+            objectsList.getSelectionModel().clearSelection();
+        }
+
     }
 
     public void addObject(ActionEvent actionEvent) {
         //treba dodati objekat u bazu
+        if(okObject) {
+            Object tmp = new Object();
+            tmp.setName(objectNameFld.getText());
+            //kada se tek doda neki novi objekat prosjecna ocjena mu je nula, i ona ce se tek kasnije racunati pomocu recenzije korisnika
+            tmp.setAverageRate(0);
+            tmp.setMunicipality(objectMunicipalityFld.getText());
+            tmp.setAdress(objectAdressFld.getText());
+
+            dao.addObject(tmp);
+            objectsList.getItems().add(tmp);
+        }
     }
 
     public void editObject(ActionEvent actionEvent) {
         //treba izbrisati objekat iz baze
+        //treba izmijeniti korisnika u bazi
+        if(this.object != null){
+            //ako postoji trenutno izabrani objekat
+            Object tmp = new Object();
+            tmp.setName(objectNameFld.getText());
+            tmp.setAverageRate(Double.parseDouble(objectRateFld.getText()));
+            tmp.setMunicipality(objectMunicipalityFld.getText());
+            tmp.setAdress(objectAdressFld.getText());
+
+            dao.editObject(tmp);
+            this.setObject(tmp);
+            //ovo promijeni u bazi ok
+        }
     }
 
     public void checkActivity(ActionEvent actionEvent) {

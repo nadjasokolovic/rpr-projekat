@@ -34,7 +34,7 @@ public class Validation {
         return true;
     }
 
-    public boolean validateGrade(int grade) {
+    public boolean validateGrade(double grade) {
         //ocjena objekta mora biti od 1 do 5
         if(grade < 1 || grade > 5)
             return false;
