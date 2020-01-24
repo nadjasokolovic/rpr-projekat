@@ -1,10 +1,10 @@
 package ba.unsa.etf.rpr.projekat;
 
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +16,7 @@ import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -46,9 +47,8 @@ public class AdminController {
     public TextField disciplineNameFld;
     public Button deleteDisciplineBtn;
     public Button addDisciplineBtn;
-    public ChoiceBox objectChoice;
-
-    public ListView disciplineList;
+    public ChoiceBox<Object> objectChoice;
+    public ListView disciplinesList;
 
     //tab termini
     public ListView trainingsList;
@@ -63,6 +63,7 @@ public class AdminController {
     //trenutno izabrane vrijednost u listView-u
     private SimpleObjectProperty<User> user = new SimpleObjectProperty<>();
     private SimpleObjectProperty<Object> object = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<Discipline> discipline = new SimpleObjectProperty<>();
 
     public User getUser() {
         return user.get();
@@ -88,6 +89,18 @@ public class AdminController {
         this.object.set(object);
     }
 
+    public Discipline getDiscipline() {
+        return discipline.get();
+    }
+
+    public SimpleObjectProperty<Discipline> disciplineProperty() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline.set(discipline);
+    }
+
     //sluze za provjeru da li je cijela forma validna
     private boolean okUser = true;
     private boolean okObject = true;
@@ -101,6 +114,7 @@ public class AdminController {
         //popunjavamo podacima sve kolekcije koje sluze za prikaz podataka
         usersList.setItems(FXCollections.observableArrayList(dao.getAllUsers()));
         objectsList.setItems(FXCollections.observableArrayList(dao.getAllObjects()));
+        objectChoice.setItems(FXCollections.observableArrayList(dao.getAllObjects()));
 
         //postavljanje trenutno odabrane vrijednosti u listView-u
         usersList.getSelectionModel().selectedItemProperty().addListener((obs, oldUser, newUser) -> {
@@ -113,6 +127,12 @@ public class AdminController {
             this.setObject((Object)newObject);
 
             objectsList.refresh();
+        });
+
+        disciplinesList.getSelectionModel().selectedItemProperty().addListener((obs, oldDiscipline, newDiscipline) -> {
+            this.setDiscipline((Discipline) newDiscipline);
+
+            disciplinesList.refresh();
         });
 
         //bidirectional binding za sva polja
@@ -156,6 +176,18 @@ public class AdminController {
                 objectAdressFld.textProperty().bindBidirectional(newObject.adressProperty());
                 StringConverter<? extends Number> converter = new DoubleStringConverter();
                 objectRateFld.textProperty().bindBidirectional(newObject.averageRateProperty(), (StringConverter<Number>) converter);
+            }
+        });
+
+        disciplineProperty().addListener((obs, oldDiscipline, newDiscipline) -> {
+            if (oldDiscipline != null) {
+                disciplineNameFld.textProperty().unbindBidirectional(oldDiscipline.nameProperty());
+            }
+            if (newDiscipline == null) {
+                disciplineNameFld.setText("");
+            }
+            else {
+                disciplineNameFld.textProperty().bindBidirectional(newDiscipline.nameProperty());
             }
         });
 
@@ -262,6 +294,15 @@ public class AdminController {
             } else {
                 disciplineNameFld.getStyleClass().removeAll("poljeIspravno");
                 disciplineNameFld.getStyleClass().add("poljeNijeIspravno");
+            }
+        });
+
+        //TAB discipline: Postavljanje svih disciplina u listView za objekat koji je odabran u choiceBox-u
+        objectChoice.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
+                ArrayList<Discipline> tmp = dao.getDisciplinesForObject(objectChoice.getItems().get((Integer) number2).getId());
+                disciplinesList.setItems(FXCollections.observableArrayList(tmp));
             }
         });
     }
@@ -432,10 +473,28 @@ public class AdminController {
     }
 
     public void deleteDiscipline(ActionEvent actionEvent) {
-        //brisat ce se ta disciplina iz baze
+        if(disciplinesList.getSelectionModel().getSelectedItem() != null){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Brisanje discipline za objekat");
+            String s = "Da li ste sigurni da želite obrisati disciplinu: " + this.getDiscipline().getName() + "?";
+            alert.setContentText(s);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                //brise disciplinu za izabrani objekat
+                Object o = objectChoice.getSelectionModel().getSelectedItem();
+                dao.deleteDisciplineForObject(o.getId(), this.getDiscipline().getId());
+
+            }
+            disciplinesList.getItems().remove(this.getDiscipline());
+            disciplinesList.getSelectionModel().clearSelection();
+        }
     }
 
     public void addDiscipline(ActionEvent actionEvent) {
-        //dodavat ce disciplinu u bazu
+        //dodavat ce disciplinu u bazu za izabrani objekat
+        Object o = objectChoice.getSelectionModel().getSelectedItem();
+        dao.addDisciplineForObject(o.getId(), disciplineNameFld.getText());
+
+        disciplinesList.getItems().add(new Discipline(0, disciplineNameFld.getText()));
     }
 }

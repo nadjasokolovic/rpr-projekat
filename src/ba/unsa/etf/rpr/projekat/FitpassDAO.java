@@ -30,6 +30,7 @@ public class FitpassDAO {
     private PreparedStatement izbirsiKorisnikAktivnostUpit, izbrisiAktivnostUpit, izbrisiKorisnikaUpit, izbrisiOsobuUpit;
     private PreparedStatement dodajObjekatUpit, maxObjekatIDUpit, izmijeniObjekatUpit, idObjektaUpit, idTreningUpit, izbrisiTreningZaObjekatUpit;
     private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit;
+    private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
 
     private Connection conn;
 
@@ -75,6 +76,13 @@ public class FitpassDAO {
             izbrisiTreningZaObjekatUpit = conn.prepareStatement("DELETE FROM trening WHERE objekat_id=?");
             izbrisiObjekatDisciplinaUpit = conn.prepareStatement("DELETE FROM objekat_disciplina WHERE objekat_id=?");
             izbrisiObjekatUpit = conn.prepareStatement("DELETE FROM objekat WHERE objekat_id=?");
+            disciplineZaObjekatUpit = conn.prepareStatement("SELECT d.disciplina_id, d.naziv FROM disciplina d, objekat_disciplina od, objekat o WHERE o.objekat_id=od.objekat_id AND od.disciplina_id=d.disciplina_id AND o.objekat_id=?");
+            izbrisiDisciplinuZaObjekat = conn.prepareStatement("DELETE FROM objekat_disciplina WHERE objekat_id=? AND disciplina_id=?");
+            dodajDisciplinuUpit = conn.prepareStatement("INSERT INTO disciplina VALUES(?,?)");
+            maxDisciplinaIDUpit = conn.prepareStatement("SELECT MAX(disciplina_id)+1 FROM disciplina");
+            dodajDisciplinuZaObjekatUpit = conn.prepareStatement("INSERT INTO objekat_disciplina VALUES(?,?)");
+            postojiDisciplinaUpit = conn.prepareStatement("SELECT * FROM disciplina WHERE naziv=?");
+            idDisciplineUpit = conn.prepareStatement("SELECT disciplina_id FROM disciplina WHERE naziv=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -173,6 +181,19 @@ public class FitpassDAO {
     private int getUserId() {
         try {
             ResultSet result = maxKorisnikIDUpit.executeQuery();
+            if(result.next()) {
+                return result.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; //nikada nece vratiti
+    }
+
+    private int getDisciplineId() {
+        try {
+            ResultSet result = maxDisciplinaIDUpit.executeQuery();
             if(result.next()) {
                 return result.getInt(1);
             }
@@ -444,25 +465,6 @@ public class FitpassDAO {
         }
     }
 
-//    public int getObjectIdForNameAndAddress(String name, String adress) {
-//        //objekat cu pretrazivati po nazivu i adresi
-//        //nema sanse da na istoj adresi postoje 2 objekta sa istim nazivom, sto ce nam obezbijediti jedinstven id
-//        try {
-//            idObjektaUpit.setString(1, name);
-//            idObjektaUpit.setString(2, adress);
-//
-//            ResultSet result = idObjektaUpit.executeQuery();
-//            System.out.println(result.next());
-//            if(result.next()) {
-//                return result.getInt(1);
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return -1;
-//    }
-
     public int getTrainingIdForObject(int idObjekta) {
         try {
             idTreningUpit.setInt(1, idObjekta);
@@ -500,6 +502,105 @@ public class FitpassDAO {
             izbrisiObjekatUpit.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Discipline> getDisciplinesForObject(int objectId){
+        ArrayList<Discipline> tmp = new ArrayList<>();
+        try {
+            disciplineZaObjekatUpit.setInt(1, objectId);
+            ResultSet result = disciplineZaObjekatUpit.executeQuery();
+            while (result.next()) {
+                Discipline d = new Discipline(result.getInt(1), result.getString(2));
+                tmp.add(d);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tmp;
+    }
+
+    public void deleteDisciplineForObject(int objectId, int disciplineId){
+        try {
+            izbrisiDisciplinuZaObjekat.setInt(1, objectId);
+            izbrisiDisciplinuZaObjekat.setInt(2, disciplineId);
+            izbrisiDisciplinuZaObjekat.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int addDiscipline(String name) {
+        //dodaje disciplinu u bazu i odmah vraca id te dodane discipline
+        int id = -1;
+        try {
+            ResultSet rs = maxDisciplinaIDUpit.executeQuery();
+            id = rs.getInt(1);
+            dodajDisciplinuUpit.setInt(1, id);
+            dodajDisciplinuUpit.setString(2, name);
+
+            dodajDisciplinuUpit.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+
+    private boolean postojiDisciplina(String naziv) {
+        try {
+            postojiDisciplinaUpit.setString(1, naziv);
+            ResultSet rs = postojiDisciplinaUpit.executeQuery();
+            if(rs.next())
+                return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private int idDiscipline(String naziv) {
+        try {
+            idDisciplineUpit.setString(1, naziv);
+            ResultSet rs = idDisciplineUpit.executeQuery();
+            if(rs.next())
+                return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public void addDisciplineForObject(int id, String name) {
+        //prvo provjerimo postoji li ta disciplina u bazi, ako ne postoji dodamo je
+        //ako ta disciplina u tabeli disciplina vec postoji ne trebamo je dodavati, nego samo dodamo u tabelu objekat_disciplina
+        if(!postojiDisciplina(name)) {
+            int idDiscipline = addDiscipline(name);
+            if(idDiscipline == -1)
+                return; //znaci nije proslo dodavanje
+
+            //potrebno je dodati u tabelu objekat_disciplina
+            try {
+                dodajDisciplinuZaObjekatUpit.setInt(1, id);
+                dodajDisciplinuZaObjekatUpit.setInt(2, idDiscipline);
+
+                dodajDisciplinuZaObjekatUpit.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            //ako postoji potreban nam je samo id te discipline da bismo mogli dodati u tabelu objekat_disciplina
+            int disciplineId = idDiscipline(name);
+            try {
+                dodajDisciplinuZaObjekatUpit.setInt(1, id);
+                dodajDisciplinuZaObjekatUpit.setInt(2, disciplineId);
+
+                dodajDisciplinuZaObjekatUpit.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

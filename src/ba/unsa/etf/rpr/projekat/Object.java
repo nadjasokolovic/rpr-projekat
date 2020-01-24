@@ -4,9 +4,12 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 
+import java.util.ArrayList;
+import java.util.Set;
 import java.util.TreeSet;
 
 public class Object {
@@ -16,6 +19,7 @@ public class Object {
     private SimpleDoubleProperty averageRate = new SimpleDoubleProperty();
     private SimpleIntegerProperty id = new SimpleIntegerProperty();
     private ObservableSet<Training> trainingSchedule = FXCollections.observableSet();
+    private ObservableList<Discipline> disciplinesInObject = FXCollections.observableArrayList();
     //treninzi ce biti sortirani po vremenu pocetka od onog sto najranije pocinje do onog koji najkasnije pocinje, MOZDA NECE
     //u ovaj skup ce se ucitavati iz baze treninzi za konkretan dan
 
@@ -31,6 +35,17 @@ public class Object {
         this.adress = new SimpleStringProperty(adress);
         this.averageRate = new SimpleDoubleProperty(averageRate);
         //bit ce potrebno citati termine iz baze i dodavati ih jedan po jedan u mapu
+        //isto to i za discipline
+    }
+
+    public Object(int id, String name, String municipality, String adress, Double averageRate, Set<Training> trainings, ArrayList<Discipline> disciplines) {
+        this.id = new SimpleIntegerProperty(id);
+        this.name = new SimpleStringProperty(name);
+        this.municipality = new SimpleStringProperty(municipality);
+        this.adress = new SimpleStringProperty(adress);
+        this.averageRate = new SimpleDoubleProperty(averageRate);
+        this.trainingSchedule = FXCollections.observableSet(trainings);
+        this.disciplinesInObject = FXCollections.observableArrayList(disciplines);
     }
 
     public String getName() {
