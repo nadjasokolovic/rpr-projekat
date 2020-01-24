@@ -1,5 +1,6 @@
 package ba.unsa.etf.rpr.projekat;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public abstract class Person {
@@ -7,10 +8,12 @@ public abstract class Person {
     private SimpleStringProperty surname = new SimpleStringProperty();
     private SimpleStringProperty username = new SimpleStringProperty();
     private SimpleStringProperty password = new SimpleStringProperty();
+    private SimpleIntegerProperty id = new SimpleIntegerProperty();
 
     public Person() {}
 
-    public Person(String name, String surname, String username, String password) {
+    public Person(int id, String name, String surname, String username, String password) {
+        this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.username = new SimpleStringProperty(username);
@@ -63,6 +66,18 @@ public abstract class Person {
 
     public void setPassword(String password) {
         this.password.set(password);
+    }
+
+    public int getId() {
+        return id.get();
+    }
+
+    public SimpleIntegerProperty idProperty() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
     }
 
     @Override

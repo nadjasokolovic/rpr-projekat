@@ -72,7 +72,7 @@ public class FitpassDAO {
             izmijeniObjekatUpit = conn.prepareStatement("UPDATE objekat SET naziv=?, prosjecna_ocjena=?, opcina=?, adresa=? WHERE objekat_id=?");
             idObjektaUpit = conn.prepareStatement("SELECT o.objekat_id FROM objekat o WHERE o.naziv=? AND o.adresa=?");
             idTreningUpit = conn.prepareStatement("SELECT t.trening_id FROM trening t WHERE t.objekat_id=?");
-            izbrisiTreningZaObjekatUpit = conn.prepareStatement("DELETE FROM trening WHERE trening_id=?");
+            izbrisiTreningZaObjekatUpit = conn.prepareStatement("DELETE FROM trening WHERE objekat_id=?");
             izbrisiObjekatDisciplinaUpit = conn.prepareStatement("DELETE FROM objekat_disciplina WHERE objekat_id=?");
             izbrisiObjekatUpit = conn.prepareStatement("DELETE FROM objekat WHERE objekat_id=?");
 
@@ -143,6 +143,7 @@ public class FitpassDAO {
         instance = null;
     }
 
+    //metode koje daju maksimalan id iz tabele, kako bi omogucile ispravno dodavanje korisnika i objekata
     private int getPersonId() {
         try {
             ResultSet result = maxOsobaIDUpit.executeQuery();
@@ -223,16 +224,16 @@ public class FitpassDAO {
         return false;
     }
 
-    public void addUser(String name, String surname, String username, String password) {
+    public void addUser(User user) {
         //prvo upisuje u tabelu osoba
         try {
             int personId = getPersonId();
 
             dodajOsobuUpit.setInt(1, personId);
-            dodajOsobuUpit.setString(2, name);
-            dodajOsobuUpit.setString(3, surname);
-            dodajOsobuUpit.setString(4, username);
-            dodajOsobuUpit.setString(5, password);
+            dodajOsobuUpit.setString(2, user.getName());
+            dodajOsobuUpit.setString(3, user.getSurname());
+            dodajOsobuUpit.setString(4, user.getUsername());
+            dodajOsobuUpit.setString(5, user.getPassword());
             dodajOsobuUpit.setString(6, "korisnik");
 
             dodajOsobuUpit.executeUpdate();
@@ -298,6 +299,7 @@ public class FitpassDAO {
             ResultSet result = korisniciUpit.executeQuery();
             while (result.next()) {
                 User tmp = new User();
+                tmp.setId(result.getInt(1));
                 tmp.setName(result.getString(2));
                 tmp.setSurname(result.getString(3));
                 tmp.setUsername(result.getString(4));
@@ -318,11 +320,7 @@ public class FitpassDAO {
             izmijeniKorisnika.setString(2, user.getSurname());
             izmijeniKorisnika.setString(3, user.getUsername());
             izmijeniKorisnika.setString(4, user.getPassword());
-            int id = getIdForUsername(user.getUsername());
-            if(id != -1)
-                izmijeniKorisnika.setInt(5, id);
-            else
-                return;
+            izmijeniKorisnika.setInt(5, user.getId());
 
             izmijeniKorisnika.executeUpdate();
         } catch (SQLException e) {
@@ -335,7 +333,7 @@ public class FitpassDAO {
         try {
             ResultSet result = objektiUpit.executeQuery();
             while (result.next()){
-                Object tmp = new Object(result.getString(2), result.getString(4), result.getString(5), result.getDouble(3));
+                Object tmp = new Object(result.getInt(1), result.getString(2), result.getString(4), result.getString(5), result.getDouble(3));
                 objects.add(tmp);
             }
         } catch (SQLException e) {
@@ -419,7 +417,6 @@ public class FitpassDAO {
     public void addObject(Object object) {
         try {
             int id = getObjectId();
-
             dodajObjekatUpit.setInt(1, id);
             dodajObjekatUpit.setString(2, object.getName());
             dodajObjekatUpit.setDouble(3, object.getAverageRate());
@@ -439,8 +436,7 @@ public class FitpassDAO {
             izmijeniObjekatUpit.setDouble(2, object.getAverageRate());
             izmijeniObjekatUpit.setString(3, object.getMunicipality());
             izmijeniObjekatUpit.setString(4, object.getAdress());
-            int id = getObjectIdForNameAndAddress(object.getName(), object.getAdress());
-            izmijeniObjekatUpit.setInt(5, id);
+            izmijeniObjekatUpit.setInt(5, object.getId());
 
             izmijeniObjekatUpit.executeUpdate();
         } catch (SQLException e) {
@@ -448,24 +444,24 @@ public class FitpassDAO {
         }
     }
 
-    public int getObjectIdForNameAndAddress(String name, String adress) {
-        //objekat cu pretrazivati po nazivu i adresi
-        //nema sanse da na istoj adresi postoje 2 objekta sa istim nazivom, sto ce nam obezbijediti jedinstven id
-        try {
-            idObjektaUpit.setString(1, name);
-            idObjektaUpit.setString(2, adress);
-
-            ResultSet result = idObjektaUpit.executeQuery();
-            System.out.println(result.next());
-            if(result.next()) {
-                return result.getInt(1);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
+//    public int getObjectIdForNameAndAddress(String name, String adress) {
+//        //objekat cu pretrazivati po nazivu i adresi
+//        //nema sanse da na istoj adresi postoje 2 objekta sa istim nazivom, sto ce nam obezbijediti jedinstven id
+//        try {
+//            idObjektaUpit.setString(1, name);
+//            idObjektaUpit.setString(2, adress);
+//
+//            ResultSet result = idObjektaUpit.executeQuery();
+//            System.out.println(result.next());
+//            if(result.next()) {
+//                return result.getInt(1);
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return -1;
+//    }
 
     public int getTrainingIdForObject(int idObjekta) {
         try {
@@ -492,7 +488,7 @@ public class FitpassDAO {
     public void deleteObjectDiscipline(int id) {
         try {
             izbrisiObjekatDisciplinaUpit.setInt(1, id);
-            izbrisiTreningZaObjekatUpit.executeUpdate();
+            izbrisiObjekatDisciplinaUpit.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

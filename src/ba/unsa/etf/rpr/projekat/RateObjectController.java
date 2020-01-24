@@ -29,7 +29,7 @@ public class RateObjectController {
     @FXML
     public void initialize() {
         objectRateFld.textProperty().addListener((obs, oldRate, newRate) -> {
-            if (dao.getValidation().validateGrade(Integer.parseInt(newRate))) {
+            if (dao.getValidation().validateGrade(newRate)) {
                 objectRateFld.getStyleClass().removeAll("poljeNijeIspravno");
                 objectRateFld.getStyleClass().add("poljeIspravno");
             } else {

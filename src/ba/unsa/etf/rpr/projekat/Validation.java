@@ -34,9 +34,11 @@ public class Validation {
         return true;
     }
 
-    public boolean validateGrade(double grade) {
+    public boolean validateGrade(String grade) {
         //ocjena objekta mora biti od 1 do 5
-        if(grade < 1 || grade > 5)
+        if(grade.isEmpty())
+            return false;
+        if(Double.parseDouble(grade) < 1 || Double.parseDouble(grade) > 5)
             return false;
 
         return true;

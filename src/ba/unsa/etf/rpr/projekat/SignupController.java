@@ -101,7 +101,13 @@ public class SignupController {
         else if(dao.getValidation().validateNameAndSurname(namefld.getText()) && dao.getValidation().validateNameAndSurname(surnameFld.getText()) &&
            dao.getValidation().validateUsername(usernameFld.getText()) && dao.getValidation().validatePassword(passwordFld.getText())) {
 
-            dao.addUser(namefld.getText(), surnameFld.getText(), usernameFld.getText(), passwordFld.getText());
+            User tmp = new User();
+            tmp.setId(0);
+            tmp.setName(namefld.getText());
+            tmp.setSurname(surnameFld.getText());
+            tmp.setUsername(usernameFld.getText());
+            tmp.setPassword(passwordFld.getText());
+            dao.addUser(tmp);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("");
             alert.setHeaderText("Uspješno ste kreirali Vaš račun!");

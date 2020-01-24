@@ -243,17 +243,17 @@ public class AdminController {
             }
         });
 
-//        objectRateFld.textProperty().addListener((obs, oldObjectRate, newObjectRate) -> {
-//            if (dao.getValidation().validateGrade(Double.parseDouble(newObjectRate))) {
-//                objectRateFld.getStyleClass().removeAll("poljeNijeIspravno");
-//                objectRateFld.getStyleClass().add("poljeIspravno");
-//                okObject = true;
-//            } else {
-//                objectRateFld.getStyleClass().removeAll("poljeIspravno");
-//                objectRateFld.getStyleClass().add("poljeNijeIspravno");
-//                okObject = false;
-//            }
-//        });
+        objectRateFld.textProperty().addListener((obs, oldObjectRate, newObjectRate) -> {
+            if (dao.getValidation().validateGrade(newObjectRate)) {
+                objectRateFld.getStyleClass().removeAll("poljeNijeIspravno");
+                objectRateFld.getStyleClass().add("poljeIspravno");
+                okObject = true;
+            } else {
+                objectRateFld.getStyleClass().removeAll("poljeIspravno");
+                objectRateFld.getStyleClass().add("poljeNijeIspravno");
+                okObject = false;
+            }
+        });
 
         disciplineNameFld.textProperty().addListener((obs, oldDisciplineName, newDisciplineName) -> {
             if (dao.getValidation().validateDiscipline(newDisciplineName)) {
@@ -272,9 +272,16 @@ public class AdminController {
             //treba provjeriti da li username postoji vec u bazi
             if(!dao.checkUsername(usernameFld.getText())){
                 //ako ne postoji moze se dodati
-                dao.addUser(nameFld.getText(), surnameFld.getText(), usernameFld.getText(), passwordFld.getText());
+                User tmp = new User();
+                tmp.setId(0); //u metodi klase DAO se postavlja ovaj id na ispravnu vrijednost
+                tmp.setName(nameFld.getText());
+                tmp.setSurname(surnameFld.getText());
+                tmp.setUsername(usernameFld.getText());
+                tmp.setPassword(passwordFld.getText());
 
-                usersList.getItems().add(new User(nameFld.getText(), surnameFld.getText(), usernameFld.getText(), passwordFld.getText()));
+                dao.addUser(tmp);
+
+                usersList.getItems().add(tmp);
             }
             else {
                 //ako postoji potrebno je obavijestiti admina o neispravnim podacima
@@ -295,6 +302,7 @@ public class AdminController {
         if(this.user != null){
             //ako postoji trenutno izabrani korisnik
             User tmp = new User();
+            tmp.setId(this.getUser().getId()); //postavlja id na id trenutnog korisnika
             tmp.setName(nameFld.getText());
             tmp.setSurname(surnameFld.getText());
             tmp.setUsername(usernameFld.getText());
@@ -346,10 +354,9 @@ public class AdminController {
             alert.setContentText(s);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
-                int idObjekta = dao.getObjectIdForNameAndAddress(this.getObject().getName(), this.getObject().getAdress());
-                int idTreninga = dao.getTrainingIdForObject(idObjekta);
+                int idObjekta = this.getObject().getId();
 
-                dao.deleteTraining(idTreninga);
+                dao.deleteTraining(idObjekta);
                 dao.deleteObjectDiscipline(idObjekta);
                 dao.deleteObject(idObjekta);
 
@@ -364,6 +371,7 @@ public class AdminController {
         //treba dodati objekat u bazu
         if(okObject) {
             Object tmp = new Object();
+            tmp.setId(0); //opet ce se u metodi dao klase postaviti ispravan id
             tmp.setName(objectNameFld.getText());
             //kada se tek doda neki novi objekat prosjecna ocjena mu je nula, i ona ce se tek kasnije racunati pomocu recenzije korisnika
             tmp.setAverageRate(0);
@@ -381,6 +389,7 @@ public class AdminController {
         if(this.object != null){
             //ako postoji trenutno izabrani objekat
             Object tmp = new Object();
+            tmp.setId(this.getObject().getId());
             tmp.setName(objectNameFld.getText());
             tmp.setAverageRate(Double.parseDouble(objectRateFld.getText()));
             tmp.setMunicipality(objectMunicipalityFld.getText());

@@ -32,7 +32,7 @@ public class ObjectController {
     @FXML
     public void initialize() {
         objectRatingFld.textProperty().addListener((obs, oldRate, newRate) -> {
-            if (dao.getValidation().validateGrade(Integer.parseInt(newRate))) {
+            if (dao.getValidation().validateGrade(newRate)) {
                 objectRatingFld.getStyleClass().removeAll("poljeNijeIspravno");
                 objectRatingFld.getStyleClass().add("poljeIspravno");
             } else {

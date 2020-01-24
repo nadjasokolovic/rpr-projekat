@@ -1,5 +1,6 @@
 package ba.unsa.etf.rpr.projekat;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -10,10 +11,12 @@ public class Training {
     private SimpleObjectProperty<LocalTime> endOfTraining = new SimpleObjectProperty<>();
     private SimpleObjectProperty<User> user = new SimpleObjectProperty<>();
     private SimpleStringProperty day = new SimpleStringProperty();
+    private SimpleIntegerProperty id = new SimpleIntegerProperty();
 
     public Training() {}
 
-    public Training(LocalTime startOfTraining, LocalTime endOfTraining, User user, String day) {
+    public Training(int id, LocalTime startOfTraining, LocalTime endOfTraining, User user, String day) {
+        this.id = new SimpleIntegerProperty(id);
         this.startOfTraining = new SimpleObjectProperty<>(startOfTraining);
         this.endOfTraining = new SimpleObjectProperty<>(endOfTraining);
         this.user = new SimpleObjectProperty<>(user);
@@ -62,6 +65,18 @@ public class Training {
     public SimpleStringProperty dayProperty() { return day;}
 
     public void setDay(String day) { this.day.set(day);}
+
+    public int getId() {
+        return id.get();
+    }
+
+    public SimpleIntegerProperty idProperty() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
+    }
 
     //napraviti compareTo da poredi treninge po vremenu pocetka
 }

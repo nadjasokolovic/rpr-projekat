@@ -48,8 +48,8 @@ public class User extends Person {
     private SimpleIntegerProperty numberOfUsedTrainings = new SimpleIntegerProperty();
     private ObservableList<Months> activity = FXCollections.observableArrayList();
 
-    public User(String name, String surname, String username, String password, ArrayList<String> notifications, LocalDate startOfMembershipFee, LocalDate endOfMembershipFee, int totalNumberOfTrainings, int numberOfUsedTrainings, ArrayList<Months> activity) {
-        super(name, surname, username, password);
+    public User(String name, String surname, String username, String password, int id, ArrayList<String> notifications, LocalDate startOfMembershipFee, LocalDate endOfMembershipFee, int totalNumberOfTrainings, int numberOfUsedTrainings, ArrayList<Months> activity) {
+        super( id, name, surname, username, password);
         this.notifications = FXCollections.observableArrayList(notifications);
         this.startOfMembershipFee = new SimpleObjectProperty<>(startOfMembershipFee);
         this.endOfMembershipFee = new SimpleObjectProperty<>(endOfMembershipFee);
@@ -61,8 +61,8 @@ public class User extends Person {
 
     public User(){}
 
-    public User(String name, String surname, String username, String password) {
-        super(name, surname, username, password);
+    public User(int id, String name, String surname, String username, String password) {
+        super( id, name, surname, username, password);
     }
 
     public ObservableList<String> getNotifications() {

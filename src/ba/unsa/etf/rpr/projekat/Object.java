@@ -1,6 +1,7 @@
 package ba.unsa.etf.rpr.projekat;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
@@ -13,6 +14,7 @@ public class Object {
     private SimpleStringProperty municipality = new SimpleStringProperty(); //moci ce se sortirati objekti po opcinama
     private SimpleStringProperty adress = new SimpleStringProperty();
     private SimpleDoubleProperty averageRate = new SimpleDoubleProperty();
+    private SimpleIntegerProperty id = new SimpleIntegerProperty();
     private ObservableSet<Training> trainingSchedule = FXCollections.observableSet();
     //treninzi ce biti sortirani po vremenu pocetka od onog sto najranije pocinje do onog koji najkasnije pocinje, MOZDA NECE
     //u ovaj skup ce se ucitavati iz baze treninzi za konkretan dan
@@ -22,7 +24,8 @@ public class Object {
 
     public Object() {}
 
-    public Object(String name, String municipality, String adress, Double averageRate) {
+    public Object(int id, String name, String municipality, String adress, Double averageRate) {
+        this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.municipality = new SimpleStringProperty(municipality);
         this.adress = new SimpleStringProperty(adress);
@@ -100,6 +103,18 @@ public class Object {
 
     public void setAverageRate(double averageRate) {
         this.averageRate.set(averageRate);
+    }
+
+    public int getId() {
+        return id.get();
+    }
+
+    public SimpleIntegerProperty idProperty() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
     }
 
     //uraditi hashCode
