@@ -78,6 +78,8 @@ public class LoginController {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user.fxml"), bundle);
                     loader.setController(ctrl);
                     Parent root = loader.load();
+                    //saljemo podatke u userController
+                    sendData(ctrl);
                     myStage.setTitle("Fitpass Sarajevo");
                     myStage.setScene(new Scene(root, 700, 500));
                     myStage.show();
@@ -97,6 +99,12 @@ public class LoginController {
             usernameFld.setText("");
             passwordFld.setText("");
         }
+    }
+
+    //slat ce podatke sa forme u userController
+    private void sendData(UserController ctrl) {
+        ctrl.setUsername(this.usernameFld.getText());
+        ctrl.setPasword(this.passwordFld.getText());
     }
 
     public void signUpAction(ActionEvent actionEvent) {

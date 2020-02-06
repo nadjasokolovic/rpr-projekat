@@ -31,6 +31,7 @@ public class FitpassDAO {
     private PreparedStatement dodajObjekatUpit, maxObjekatIDUpit, izmijeniObjekatUpit, idObjektaUpit, idTreningUpit, izbrisiTreningZaObjekatUpit;
     private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit;
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
+    private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit;
 
     private Connection conn;
 
@@ -83,6 +84,9 @@ public class FitpassDAO {
             dodajDisciplinuZaObjekatUpit = conn.prepareStatement("INSERT INTO objekat_disciplina VALUES(?,?)");
             postojiDisciplinaUpit = conn.prepareStatement("SELECT * FROM disciplina WHERE naziv=?");
             idDisciplineUpit = conn.prepareStatement("SELECT disciplina_id FROM disciplina WHERE naziv=?");
+            iskoristenoTerminaUpit = conn.prepareStatement("SELECT k.iskoristeno_termina FROM korisnik k WHERE k.korisnik_id=?");
+            ukupnoTerminaUpit = conn.prepareStatement("SELECT k.ukupno_termina FROM korisnik k WHERE k.korisnik_id=?");
+            obavijestiUpit = conn.prepareStatement("SELECT o.tekst FROM obavijest o WHERE o.korisnik_id=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -602,5 +606,43 @@ public class FitpassDAO {
                 e.printStackTrace();
             }
         }
+    }
+
+    public int getNumberTerminsUsed(int userId) {
+        try {
+            iskoristenoTerminaUpit.setInt(1, userId);
+
+            return iskoristenoTerminaUpit.executeQuery().getInt(1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public int getNumberOfTermins(int userId) {
+        try {
+            ukupnoTerminaUpit.setInt(1, userId);
+
+            return ukupnoTerminaUpit.executeQuery().getInt(1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public ArrayList<String> getNotifications(int userId) {
+        ArrayList<String> notifications = new ArrayList<>();
+        try {
+            obavijestiUpit.setInt(1, userId);
+            ResultSet rs = obavijestiUpit.executeQuery();
+            while (rs.next())
+                notifications.add(rs.getString(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return notifications;
     }
 }
