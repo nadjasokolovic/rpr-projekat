@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS "osoba" (
 CREATE TABLE IF NOT EXISTS "objekat" (
 	"objekat_id"	INTEGER PRIMARY KEY AUTOINCREMENT,
 	"naziv"	TEXT,
-	"prosjecna_ocjena"	REAL,
 	"opcina"	TEXT,
 	"adresa"	TEXT
 );
@@ -64,6 +63,16 @@ CREATE TABLE IF NOT EXISTS "aktivnost" (
 	"aktivnost_id"	INTEGER PRIMARY KEY AUTOINCREMENT,
 	"mjesec"	TEXT,
 	"godina"	INTEGER
+);
+CREATE TABLE IF NOT EXISTS "ocjena" (
+	"ocjena_id"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	"iznos"	INTEGER
+);
+CREATE TABLE IF NOT EXISTS "objekat_ocjena" (
+	"objekat_id"	INTEGER,
+	"ocjena_id"	INTEGER,
+	FOREIGN KEY("objekat_id") REFERENCES "objekat"("objekat_id"),
+	FOREIGN KEY("ocjena_id") REFERENCES "ocjena"("ocjena_id")
 );
 INSERT INTO "trening" VALUES (1,'ponedjeljak','9:00','10:00',1);
 INSERT INTO "trening" VALUES (2,'ponedjeljak','12:00','13:00',1);
@@ -129,10 +138,10 @@ INSERT INTO "osoba" VALUES (3,'Mubina','Kamberović','mubinaK','mubina121','kori
 INSERT INTO "osoba" VALUES (4,'Sabina','Alagić','alagicS','sabinaA','korisnik');
 INSERT INTO "osoba" VALUES (5,'Ajla','Salispahić','ajlaaS','ajlas123','korisnik');
 INSERT INTO "osoba" VALUES (6,'Rea','Memić','reamemic','reamem11','korisnik');
-INSERT INTO "objekat" VALUES (1,'Sportska Akademija Respect',3.5,'Sarajevo - Centar','Alipašina bb');
-INSERT INTO "objekat" VALUES (2,'Olimpijski stadion Koševo',4.0,'Sarajevo - Centar','Patriotske lige 35');
-INSERT INTO "objekat" VALUES (3,'Fitness centar Progym',3.7,'Sarajevo - Centar','Patriotske lige bb');
-INSERT INTO "objekat" VALUES (4,'ALL IN Fitness',4.8,'Novo Sarajevo','Paromlinska 34');
+INSERT INTO "objekat" VALUES (1,'Sportska Akademija Respect','Sarajevo - Centar','Alipašina bb');
+INSERT INTO "objekat" VALUES (2,'Olimpijski stadion Koševo','Sarajevo - Centar','Patriotske lige 35');
+INSERT INTO "objekat" VALUES (3,'Fitness centar Progym','Sarajevo - Centar','Patriotske lige bb');
+INSERT INTO "objekat" VALUES (4,'ALL IN Fitness','Novo Sarajevo','Paromlinska 34');
 INSERT INTO "disciplina" VALUES (1,'CrossFit');
 INSERT INTO "disciplina" VALUES (2,'Fitness');
 INSERT INTO "disciplina" VALUES (3,'Borilacke vjestine');
@@ -142,4 +151,24 @@ INSERT INTO "aktivnost" VALUES (2,'Decembar',2019);
 INSERT INTO "aktivnost" VALUES (3,'Januar',2020);
 INSERT INTO "aktivnost" VALUES (4,'Februar',2020);
 INSERT INTO "aktivnost" VALUES (5,'Oktobar',2019);
+INSERT INTO "ocjena" VALUES (1,1);
+INSERT INTO "ocjena" VALUES (2,2);
+INSERT INTO "ocjena" VALUES (3,3);
+INSERT INTO "ocjena" VALUES (4,4);
+INSERT INTO "ocjena" VALUES (5,5);
+INSERT INTO "objekat_ocjena" VALUES (1,3);
+INSERT INTO "objekat_ocjena" VALUES (1,4);
+INSERT INTO "objekat_ocjena" VALUES (1,5);
+INSERT INTO "objekat_ocjena" VALUES (1,4);
+INSERT INTO "objekat_ocjena" VALUES (2,3);
+INSERT INTO "objekat_ocjena" VALUES (2,4);
+INSERT INTO "objekat_ocjena" VALUES (2,4);
+INSERT INTO "objekat_ocjena" VALUES (3,5);
+INSERT INTO "objekat_ocjena" VALUES (3,4);
+INSERT INTO "objekat_ocjena" VALUES (3,4);
+INSERT INTO "objekat_ocjena" VALUES (3,4);
+INSERT INTO "objekat_ocjena" VALUES (4,4);
+INSERT INTO "objekat_ocjena" VALUES (4,5);
+INSERT INTO "objekat_ocjena" VALUES (4,5);
+INSERT INTO "objekat_ocjena" VALUES (4,5);
 COMMIT;

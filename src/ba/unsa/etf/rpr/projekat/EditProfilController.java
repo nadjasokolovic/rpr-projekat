@@ -79,7 +79,7 @@ public class EditProfilController {
         usernameFld.setText(this.getUsername());
         passwordFld.setText(this.getPassword());
         passwordRepeatFld.setText(this.getPassword());
-        
+
         namefld.textProperty().addListener((obs, oldName, newName) -> {
             if (dao.getValidation().validateNameAndSurname(newName)) {
                 namefld.getStyleClass().removeAll("poljeNijeIspravno");
