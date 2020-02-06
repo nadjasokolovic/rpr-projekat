@@ -31,7 +31,7 @@ public class FitpassDAO {
     private PreparedStatement dodajObjekatUpit, maxObjekatIDUpit, izmijeniObjekatUpit, idObjektaUpit, idTreningUpit, izbrisiTreningZaObjekatUpit;
     private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit;
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
-    private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit;
+    private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit;
 
     private Connection conn;
 
@@ -87,6 +87,7 @@ public class FitpassDAO {
             iskoristenoTerminaUpit = conn.prepareStatement("SELECT k.iskoristeno_termina FROM korisnik k WHERE k.korisnik_id=?");
             ukupnoTerminaUpit = conn.prepareStatement("SELECT k.ukupno_termina FROM korisnik k WHERE k.korisnik_id=?");
             obavijestiUpit = conn.prepareStatement("SELECT o.tekst FROM obavijest o WHERE o.korisnik_id=?");
+            korisnikUpit = conn.prepareStatement("SELECT o.osoba_id, o.ime, o.prezime, o.username, o.password FROM osoba o WHERE o.osoba_id=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -660,5 +661,16 @@ public class FitpassDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public User getUser(int personId) {
+        try {
+            korisnikUpit.setInt(1, personId);
+            ResultSet result = korisnikUpit.executeQuery();
+            return new User(result.getInt(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

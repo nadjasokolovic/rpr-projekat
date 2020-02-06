@@ -10,6 +10,41 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class EditProfilController {
+    //za prijem podataka iz UsserAccountController-a
+    private String ime, prezime, username, password;
+
+    public String getIme() {
+        return ime;
+    }
+
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
+
+    public String getPrezime() {
+        return prezime;
+    }
+
+    public void setPrezime(String prezime) {
+        this.prezime = prezime;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public PasswordField passwordFld;
     public PasswordField passwordRepeatFld;
     public TextField namefld;
@@ -39,6 +74,12 @@ public class EditProfilController {
     private boolean validForm = false;
     @FXML
     public void initialize() {
+        namefld.setText(this.getIme());
+        surnameFld.setText(this.getPrezime());
+        usernameFld.setText(this.getUsername());
+        passwordFld.setText(this.getPassword());
+        passwordRepeatFld.setText(this.getPassword());
+        
         namefld.textProperty().addListener((obs, oldName, newName) -> {
             if (dao.getValidation().validateNameAndSurname(newName)) {
                 namefld.getStyleClass().removeAll("poljeNijeIspravno");

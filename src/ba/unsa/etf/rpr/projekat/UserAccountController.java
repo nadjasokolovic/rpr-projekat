@@ -65,7 +65,7 @@ public class UserAccountController {
         this.dao = dao;
     }
 
-    public void editProfil(ActionEvent actionEvent) {
+    public void editProfil(ActionEvent actionEvent) throws NonExistentUserException {
         FitpassDAO dao = FitpassDAO.getInstance();
         EditProfilController ctrl = new EditProfilController(dao);
 
@@ -73,7 +73,7 @@ public class UserAccountController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/editprofil.fxml"), bundle);
         loader.setController(ctrl);
         //prosljedjivanje korisnika u EditProfilCOntroller
-        ctrl.setUser(this.getUsername());
+        sendData(ctrl);
         Stage myStage = new Stage();
         Parent root = null;
         try {
@@ -103,6 +103,23 @@ public class UserAccountController {
         myStage.setTitle("Fitpass Sarajevo");
         myStage.setScene(new Scene(root, 700, 500));
         myStage.show();
+    }
+
+    private void sendData(EditProfilController ctrl) throws NonExistentUserException {
+        //za slanje podataka o korisniku u EditProfilController
+        ctrl.setUser(this.getUsername());
+        //potrebno je iz baze ucitati podatke o korisniku na osnovu username
+        int personId = dao.getIdForUsername(this.getUsername());
+
+        User user = dao.getUser(personId);
+        if(user == null)
+            throw new NonExistentUserException("Ovaj korisnik ne postoji u bazi podataka");
+
+        //slanje podataka
+        ctrl.setIme(user.getName());
+        ctrl.setPrezime(user.getSurname());
+        ctrl.setUsername(user.getUsername());
+        ctrl.setPassword(user.getPassword());
     }
 
     @FXML
