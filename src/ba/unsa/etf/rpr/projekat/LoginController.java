@@ -66,6 +66,7 @@ public class LoginController {
                     ResourceBundle bundle = ResourceBundle.getBundle("Translation");
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin.fxml"), bundle);
                     loader.setController(ctrl);
+                    //sendData(ctrl);
                     Parent root = loader.load();
                     myStage.setTitle("Fitpass Sarajevo");
                     myStage.setScene(new Scene(root, 700, 500));
@@ -101,10 +102,16 @@ public class LoginController {
         }
     }
 
-    //slat ce podatke sa forme u userController
+    //slat ce podatke sa forme u UserController
     private void sendData(UserController ctrl) {
         ctrl.setUsername(this.usernameFld.getText());
         ctrl.setPasword(this.passwordFld.getText());
+    }
+
+    //slat ce podatke sa forme u AdminController
+    private void sendData(AdminController ctrl) {
+        ctrl.setUsername(this.usernameFld.getText());
+        ctrl.setPassword(this.passwordFld.getText());
     }
 
     public void signUpAction(ActionEvent actionEvent) {

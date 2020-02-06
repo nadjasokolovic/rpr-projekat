@@ -16,7 +16,6 @@ public class Object {
     private SimpleStringProperty name = new SimpleStringProperty();
     private SimpleStringProperty municipality = new SimpleStringProperty(); //moci ce se sortirati objekti po opcinama
     private SimpleStringProperty adress = new SimpleStringProperty();
-    private SimpleDoubleProperty averageRate = new SimpleDoubleProperty();
     private SimpleIntegerProperty id = new SimpleIntegerProperty();
     private ObservableSet<Training> trainingSchedule = FXCollections.observableSet();
     private ObservableList<Discipline> disciplinesInObject = FXCollections.observableArrayList();
@@ -28,22 +27,20 @@ public class Object {
 
     public Object() {}
 
-    public Object(int id, String name, String municipality, String adress, Double averageRate) {
+    public Object(int id, String name, String municipality, String adress) {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.municipality = new SimpleStringProperty(municipality);
         this.adress = new SimpleStringProperty(adress);
-        this.averageRate = new SimpleDoubleProperty(averageRate);
         //bit ce potrebno citati termine iz baze i dodavati ih jedan po jedan u mapu
         //isto to i za discipline
     }
 
-    public Object(int id, String name, String municipality, String adress, Double averageRate, Set<Training> trainings, ArrayList<Discipline> disciplines) {
+    public Object(int id, String name, String municipality, String adress, Set<Training> trainings, ArrayList<Discipline> disciplines) {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.municipality = new SimpleStringProperty(municipality);
         this.adress = new SimpleStringProperty(adress);
-        this.averageRate = new SimpleDoubleProperty(averageRate);
         this.trainingSchedule = FXCollections.observableSet(trainings);
         this.disciplinesInObject = FXCollections.observableArrayList(disciplines);
     }
@@ -106,18 +103,6 @@ public class Object {
 
     public void setNumberOfGrades(int numberOfGrades) {
         this.numberOfGrades = numberOfGrades;
-    }
-
-    public double getAverageRate() {
-        return averageRate.get();
-    }
-
-    public SimpleDoubleProperty averageRateProperty() {
-        return averageRate;
-    }
-
-    public void setAverageRate(double averageRate) {
-        this.averageRate.set(averageRate);
     }
 
     public int getId() {

@@ -38,7 +38,6 @@ public class AdminController {
     public TextField objectNameFld;
     public TextField objectMunicipalityFld;
     public TextField objectAdressFld;
-    public TextField objectRateFld;
     public Button deleteObjectBtn;
     public Button addObjectBtn;
 
@@ -53,6 +52,24 @@ public class AdminController {
     //tab termini
     public ListView trainingsList;
 
+    //za prosljedjivanje podataka
+    private String username, password;
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     private FitpassDAO dao = FitpassDAO.getInstance();
 
@@ -162,20 +179,20 @@ public class AdminController {
                 objectNameFld.textProperty().unbindBidirectional(oldObject.nameProperty());
                 objectMunicipalityFld.textProperty().unbindBidirectional(oldObject.municipalityProperty());
                 objectAdressFld.textProperty().unbindBidirectional(oldObject.adressProperty());
-                objectRateFld.textProperty().unbindBidirectional(oldObject.averageRateProperty());
+                //objectRateFld.textProperty().unbindBidirectional(oldObject.averageRateProperty());
             }
             if (newObject == null) {
                 objectNameFld.setText("");
                 objectMunicipalityFld.setText("");
                 objectAdressFld.setText("");
-                objectRateFld.setText("");
+                //objectRateFld.setText("");
             }
             else {
                 objectNameFld.textProperty().bindBidirectional(newObject.nameProperty());
                 objectMunicipalityFld.textProperty().bindBidirectional(newObject.municipalityProperty());
                 objectAdressFld.textProperty().bindBidirectional(newObject.adressProperty());
                 StringConverter<? extends Number> converter = new DoubleStringConverter();
-                objectRateFld.textProperty().bindBidirectional(newObject.averageRateProperty(), (StringConverter<Number>) converter);
+                //objectRateFld.textProperty().bindBidirectional(newObject.averageRateProperty(), (StringConverter<Number>) converter);
             }
         });
 
@@ -275,17 +292,6 @@ public class AdminController {
             }
         });
 
-        objectRateFld.textProperty().addListener((obs, oldObjectRate, newObjectRate) -> {
-            if (dao.getValidation().validateGrade(newObjectRate)) {
-                objectRateFld.getStyleClass().removeAll("poljeNijeIspravno");
-                objectRateFld.getStyleClass().add("poljeIspravno");
-                okObject = true;
-            } else {
-                objectRateFld.getStyleClass().removeAll("poljeIspravno");
-                objectRateFld.getStyleClass().add("poljeNijeIspravno");
-                okObject = false;
-            }
-        });
 
         disciplineNameFld.textProperty().addListener((obs, oldDisciplineName, newDisciplineName) -> {
             if (dao.getValidation().validateDiscipline(newDisciplineName)) {
@@ -399,6 +405,7 @@ public class AdminController {
 
                 dao.deleteTraining(idObjekta);
                 dao.deleteObjectDiscipline(idObjekta);
+                dao.deleteObjectRate(idObjekta);
                 dao.deleteObject(idObjekta);
 
             }
@@ -414,8 +421,6 @@ public class AdminController {
             Object tmp = new Object();
             tmp.setId(0); //opet ce se u metodi dao klase postaviti ispravan id
             tmp.setName(objectNameFld.getText());
-            //kada se tek doda neki novi objekat prosjecna ocjena mu je nula, i ona ce se tek kasnije racunati pomocu recenzije korisnika
-            tmp.setAverageRate(0);
             tmp.setMunicipality(objectMunicipalityFld.getText());
             tmp.setAdress(objectAdressFld.getText());
 
@@ -432,7 +437,6 @@ public class AdminController {
             Object tmp = new Object();
             tmp.setId(this.getObject().getId());
             tmp.setName(objectNameFld.getText());
-            tmp.setAverageRate(Double.parseDouble(objectRateFld.getText()));
             tmp.setMunicipality(objectMunicipalityFld.getText());
             tmp.setAdress(objectAdressFld.getText());
 
@@ -454,22 +458,23 @@ public class AdminController {
     }
 
     public void goToProfil(ActionEvent actionEvent) {
-        FitpassDAO dao = FitpassDAO.getInstance();
-        UserAccountController ctrl = new UserAccountController(dao);
-
-        ResourceBundle bundle = ResourceBundle.getBundle("Translation");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"), bundle);
-        loader.setController(ctrl);
-        Stage myStage = new Stage();
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        myStage.setTitle("Fitpass Sarajevo");
-        myStage.setScene(new Scene(root, 700, 500));
-        myStage.show();
+//        FitpassDAO dao = FitpassDAO.getInstance();
+//        UserAccountController ctrl = new UserAccountController(dao);
+//
+//        ResourceBundle bundle = ResourceBundle.getBundle("Translation");
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"), bundle);
+//        loader.setController(ctrl);
+//        sendData(ctrl);
+//        Stage myStage = new Stage();
+//        Parent root = null;
+//        try {
+//            root = loader.load();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        myStage.setTitle("Fitpass Sarajevo");
+//        myStage.setScene(new Scene(root, 700, 500));
+//        myStage.show();
     }
 
     public void deleteDiscipline(ActionEvent actionEvent) {
@@ -496,5 +501,25 @@ public class AdminController {
         dao.addDisciplineForObject(o.getId(), disciplineNameFld.getText());
 
         disciplinesList.getItems().add(new Discipline(0, disciplineNameFld.getText()));
+    }
+
+    private void sendData(UserAccountController ctrl) {
+        //prvo na osnovu username koji je unique iz baze ucitavati id osobe
+        int personId = dao.getIdForUsername(this.getUsername());
+        //potrebno je pronaci idKorisnika na osnovu id osobe
+        int userId = dao.getUserIdForPersonId(personId);
+
+        //iz tabele korisnik dobijamo podatke o broju iskoristenih termina i broju preostalih
+        int brojIskoristenihTermina = dao.getNumberTerminsUsed(userId);
+        //iz baze ucitavamo ukupan broj termina da bismo dobili broj preostalih
+        int ukupnoTermina = dao.getNumberOfTermins(userId);
+        //iz baze ucitavamo sve obavijesti za korisnika
+        ArrayList<String> obavijesti = dao.getNotifications(userId);
+
+        //slanje ovih podataka u userAccountController
+        ctrl.setUsername(this.getUsername());
+        ctrl.setNumberOfTrainings(ukupnoTermina - brojIskoristenihTermina);
+        ctrl.setNumberOfTrainingsUsed(brojIskoristenihTermina);
+        ctrl.setObavijesti(obavijesti);
     }
 }

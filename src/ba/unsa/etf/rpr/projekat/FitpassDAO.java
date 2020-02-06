@@ -28,7 +28,7 @@ public class FitpassDAO {
     private PreparedStatement probniUpit, provjeraKorisnikaUpit, dodajOsobuUpit, dodajKorisnikaUpit, maxOsobaIDUpit, maxKorisnikIDUpit, provjraUsernameUpit;
     private PreparedStatement azurirajPasswordUpit, dajKorisnikaUpit, korisniciUpit, izmijeniKorisnika, objektiUpit, idKorisnikaUpit, idAktivnostUpit;
     private PreparedStatement izbirsiKorisnikAktivnostUpit, izbrisiAktivnostUpit, izbrisiKorisnikaUpit, izbrisiOsobuUpit;
-    private PreparedStatement dodajObjekatUpit, maxObjekatIDUpit, izmijeniObjekatUpit, idObjektaUpit, idTreningUpit, izbrisiTreningZaObjekatUpit;
+    private PreparedStatement dodajObjekatUpit, maxObjekatIDUpit, izmijeniObjekatUpit, idObjektaUpit, idTreningUpit, izbrisiTreningZaObjekatUpit, izbrisiObjekatOcjenaUpit;
     private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit;
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
     private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit;
@@ -69,9 +69,9 @@ public class FitpassDAO {
             izbrisiAktivnostUpit = conn.prepareStatement("DELETE FROM aktivnost WHERE aktivnost_id=?");
             izbrisiKorisnikaUpit = conn.prepareStatement("DELETE FROM korisnik WHERE korisnik_id=?");
             izbrisiOsobuUpit = conn.prepareStatement("DELETE FROM osoba WHERE osoba_id=?");
-            dodajObjekatUpit = conn.prepareStatement("INSERT INTO objekat VALUES(?,?,?,?,?)");
+            dodajObjekatUpit = conn.prepareStatement("INSERT INTO objekat VALUES(?,?,?,?)");
             maxObjekatIDUpit = conn.prepareStatement("SELECT MAX(objekat_id)+1 FROM objekat");
-            izmijeniObjekatUpit = conn.prepareStatement("UPDATE objekat SET naziv=?, prosjecna_ocjena=?, opcina=?, adresa=? WHERE objekat_id=?");
+            izmijeniObjekatUpit = conn.prepareStatement("UPDATE objekat SET naziv=?, opcina=?, adresa=? WHERE objekat_id=?");
             idObjektaUpit = conn.prepareStatement("SELECT o.objekat_id FROM objekat o WHERE o.naziv=? AND o.adresa=?");
             idTreningUpit = conn.prepareStatement("SELECT t.trening_id FROM trening t WHERE t.objekat_id=?");
             izbrisiTreningZaObjekatUpit = conn.prepareStatement("DELETE FROM trening WHERE objekat_id=?");
@@ -88,6 +88,7 @@ public class FitpassDAO {
             ukupnoTerminaUpit = conn.prepareStatement("SELECT k.ukupno_termina FROM korisnik k WHERE k.korisnik_id=?");
             obavijestiUpit = conn.prepareStatement("SELECT o.tekst FROM obavijest o WHERE o.korisnik_id=?");
             korisnikUpit = conn.prepareStatement("SELECT o.osoba_id, o.ime, o.prezime, o.username, o.password FROM osoba o WHERE o.osoba_id=?");
+            izbrisiObjekatOcjenaUpit = conn.prepareStatement("DELETE FROM objekat_ocjena WHERE objekat_id=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -359,7 +360,7 @@ public class FitpassDAO {
         try {
             ResultSet result = objektiUpit.executeQuery();
             while (result.next()){
-                Object tmp = new Object(result.getInt(1), result.getString(2), result.getString(4), result.getString(5), result.getDouble(3));
+                Object tmp = new Object(result.getInt(1), result.getString(2), result.getString(3), result.getString(4));
                 objects.add(tmp);
             }
         } catch (SQLException e) {
@@ -445,9 +446,9 @@ public class FitpassDAO {
             int id = getObjectId();
             dodajObjekatUpit.setInt(1, id);
             dodajObjekatUpit.setString(2, object.getName());
-            dodajObjekatUpit.setDouble(3, object.getAverageRate());
-            dodajObjekatUpit.setString(4, object.getMunicipality());
-            dodajObjekatUpit.setString(5, object.getAdress());
+            //dodajObjekatUpit.setDouble(3, object.getAverageRate());
+            dodajObjekatUpit.setString(3, object.getMunicipality());
+            dodajObjekatUpit.setString(4, object.getAdress());
 
             dodajObjekatUpit.executeUpdate();
         } catch (SQLException e) {
@@ -459,10 +460,10 @@ public class FitpassDAO {
     public void editObject(Object object){
         try {
             izmijeniObjekatUpit.setString(1, object.getName());
-            izmijeniObjekatUpit.setDouble(2, object.getAverageRate());
-            izmijeniObjekatUpit.setString(3, object.getMunicipality());
-            izmijeniObjekatUpit.setString(4, object.getAdress());
-            izmijeniObjekatUpit.setInt(5, object.getId());
+            //izmijeniObjekatUpit.setDouble(2, object.getAverageRate());
+            izmijeniObjekatUpit.setString(2, object.getMunicipality());
+            izmijeniObjekatUpit.setString(3, object.getAdress());
+            izmijeniObjekatUpit.setInt(4, object.getId());
 
             izmijeniObjekatUpit.executeUpdate();
         } catch (SQLException e) {
@@ -496,6 +497,15 @@ public class FitpassDAO {
         try {
             izbrisiObjekatDisciplinaUpit.setInt(1, id);
             izbrisiObjekatDisciplinaUpit.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteObjectRate(int idObjekta) {
+        try {
+            izbrisiObjekatOcjenaUpit.setInt(1,idObjekta);
+            izbrisiObjekatOcjenaUpit.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -673,4 +683,5 @@ public class FitpassDAO {
         }
         return null;
     }
+
 }

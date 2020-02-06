@@ -162,7 +162,6 @@
                                             <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                             <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                                            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                         </rowConstraints>
                                         <children>
@@ -176,14 +175,9 @@
                                                     <Insets left="10.0" />
                                                 </GridPane.margin>
                                             </Label>
-                                            <Label text="%ocjena" GridPane.halignment="LEFT" GridPane.rowIndex="4">
-                                             <GridPane.margin>
-                                                <Insets left="10.0" />
-                                             </GridPane.margin></Label>
                                             <TextField fx:id="objectNameFld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                             <TextField fx:id="objectAdressFld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                            <TextField fx:id="objectRateFld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                          <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                          <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="4">
                                             <buttons>
                                               <Button fx:id="addObjectBtn" mnemonicParsing="false" onAction="#addObject" styleClass="addBtn" stylesheets="@../css/style.css" text="%dodaj" />
                                                 <Button fx:id="editObjectBtn" mnemonicParsing="false" onAction="#editObject" styleClass="editBtn" stylesheets="@../css/style.css" text="%uredi" />
