@@ -29,7 +29,7 @@ public class FitpassDAO {
     private PreparedStatement azurirajPasswordUpit, dajKorisnikaUpit, korisniciUpit, izmijeniKorisnika, objektiUpit, idKorisnikaUpit, idAktivnostUpit;
     private PreparedStatement izbirsiKorisnikAktivnostUpit, izbrisiAktivnostUpit, izbrisiKorisnikaUpit, izbrisiOsobuUpit;
     private PreparedStatement dodajObjekatUpit, maxObjekatIDUpit, izmijeniObjekatUpit, idObjektaUpit, idTreningUpit, izbrisiTreningZaObjekatUpit, izbrisiObjekatOcjenaUpit;
-    private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit;
+    private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit, dodajOcjenuZaObjekatUpit;
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
     private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit;
 
@@ -89,6 +89,7 @@ public class FitpassDAO {
             obavijestiUpit = conn.prepareStatement("SELECT o.tekst FROM obavijest o WHERE o.korisnik_id=?");
             korisnikUpit = conn.prepareStatement("SELECT o.osoba_id, o.ime, o.prezime, o.username, o.password FROM osoba o WHERE o.osoba_id=?");
             izbrisiObjekatOcjenaUpit = conn.prepareStatement("DELETE FROM objekat_ocjena WHERE objekat_id=?");
+            dodajOcjenuZaObjekatUpit = conn.prepareStatement("INSERT INTO objekat_ocjena VALUES(?,?)");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -684,4 +685,15 @@ public class FitpassDAO {
         return null;
     }
 
+    public void addObjectRate(int objectId, int rate) {
+        try {
+            dodajOcjenuZaObjekatUpit.setInt(1, objectId);
+            //mogu ovako samo ocjenu, jer u bazi svaka ocjena se poklapa sa njenim id-om, npr ocjena 3 ima id 3
+            dodajOcjenuZaObjekatUpit.setInt(2, rate);
+
+            dodajOcjenuZaObjekatUpit.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

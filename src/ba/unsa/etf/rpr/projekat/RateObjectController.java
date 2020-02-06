@@ -1,5 +1,7 @@
 package ba.unsa.etf.rpr.projekat;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +17,8 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 public class RateObjectController {
+    private Validation validation = new Validation();
+
     public ChoiceBox objectChoice;
     public Button exitBtn;
     public TextField objectRateFld;
@@ -26,8 +30,11 @@ public class RateObjectController {
         this.dao = dao;
     }
 
+
     @FXML
     public void initialize() {
+        objectChoice.setItems(FXCollections.observableArrayList(dao.getAllObjects()));
+
         objectRateFld.textProperty().addListener((obs, oldRate, newRate) -> {
             if (dao.getValidation().validateGrade(newRate)) {
                 objectRateFld.getStyleClass().removeAll("poljeNijeIspravno");
@@ -47,7 +54,18 @@ public class RateObjectController {
     }
 
     public void rateObject(ActionEvent actionEvent) {
-        //upisati novu ocjenu u bazu
+        //upisivanje nove ocjene u bazu
+
+        //prvo provjera da li je izabran konkretan objekat
+        if(objectChoice.getSelectionModel().getSelectedItem() != null) {
+            Object object = (Object)objectChoice.getSelectionModel().getSelectedItem();
+            if(!validation.validateGrade(objectRateFld.getText()))
+                throw new IllegalRateException("Neispravna cjena");
+
+            //u suprotnom, ako se iuzetak nije desio, potrebno je dodati ocjenu za izabrani objekat
+            dao.addObjectRate(object.getId(), Integer.parseInt(objectRateFld.getText()));
+        }
+
 
         Node n = (Node) actionEvent.getSource();
         Stage stage = (Stage) n.getScene().getWindow();

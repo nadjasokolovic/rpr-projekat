@@ -38,7 +38,7 @@ public class Validation {
         //ocjena objekta mora biti od 1 do 5
         if(grade.isEmpty())
             return false;
-        if(Double.parseDouble(grade) < 1 || Double.parseDouble(grade) > 5)
+        if(Integer.parseInt(grade) < 1 || Integer.parseInt(grade) > 5)
             return false;
 
         return true;
