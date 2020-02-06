@@ -68,7 +68,7 @@
                <children>
                   <Label prefHeight="21.0" prefWidth="155.0" text="%izborDiscipline" GridPane.columnIndex="1" />
                   <ChoiceBox fx:id="disciplineChoice" prefHeight="31.0" prefWidth="231.0" styleClass="disciplineChoice" stylesheets="@../css/style.css" GridPane.columnIndex="2" />
-                  <ListView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                  <ListView fx:id="objectsList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
                      <padding>
                         <Insets bottom="5.0" />
                      </padding>
@@ -88,9 +88,9 @@
                       <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <RadioButton fx:id="radioBtn1" mnemonicParsing="false" styleClass="radioBtn1" stylesheets="@../css/style.css" text="%ocjenaSortiranje" />
-                        <RadioButton fx:id="radioBtn3" mnemonicParsing="false" styleClass="radioBtn3" stylesheets="@../css/style.css" text="%abecednoSortiranje" GridPane.rowIndex="2" />
-                        <RadioButton fx:id="radioBtn2" mnemonicParsing="false" styleClass="radioBtn2" stylesheets="@../css/style.css" text="%lokacijaSortiranje" GridPane.rowIndex="1" />
+                        <RadioButton fx:id="rateSort" mnemonicParsing="false" styleClass="radioBtn1" stylesheets="@../css/style.css" text="%ocjenaSortiranje" />
+                        <RadioButton fx:id="alphabetSort" mnemonicParsing="false" styleClass="radioBtn3" stylesheets="@../css/style.css" text="%abecednoSortiranje" GridPane.rowIndex="2" />
+                        <RadioButton fx:id="locationSort" mnemonicParsing="false" styleClass="radioBtn2" stylesheets="@../css/style.css" text="%lokacijaSortiranje" GridPane.rowIndex="1" />
                      </children>
                      <padding>
                         <Insets left="5.0" />

@@ -71,14 +71,20 @@ public class EditProfilController {
         this.user = user;
     }
 
-    private boolean validForm = false;
+    private boolean validForm = true;
     @FXML
     public void initialize() {
+        //da bi se prilikom otvaranja forme korektno prikazali podaci o korisniku
         namefld.setText(this.getIme());
+        namefld.getStyleClass().add("poljeIspravno");
         surnameFld.setText(this.getPrezime());
+        surnameFld.getStyleClass().add("poljeIspravno");
         usernameFld.setText(this.getUsername());
+        usernameFld.getStyleClass().add("poljeIspravno");
         passwordFld.setText(this.getPassword());
+        passwordFld.getStyleClass().add("poljeIspravno");
         passwordRepeatFld.setText(this.getPassword());
+        passwordRepeatFld.getStyleClass().add("poljeIspravno");
 
         namefld.textProperty().addListener((obs, oldName, newName) -> {
             if (dao.getValidation().validateNameAndSurname(newName)) {

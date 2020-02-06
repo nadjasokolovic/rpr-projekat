@@ -29,9 +29,9 @@ public class FitpassDAO {
     private PreparedStatement azurirajPasswordUpit, dajKorisnikaUpit, korisniciUpit, izmijeniKorisnika, objektiUpit, idKorisnikaUpit, idAktivnostUpit;
     private PreparedStatement izbirsiKorisnikAktivnostUpit, izbrisiAktivnostUpit, izbrisiKorisnikaUpit, izbrisiOsobuUpit;
     private PreparedStatement dodajObjekatUpit, maxObjekatIDUpit, izmijeniObjekatUpit, idObjektaUpit, idTreningUpit, izbrisiTreningZaObjekatUpit, izbrisiObjekatOcjenaUpit;
-    private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit, dodajOcjenuZaObjekatUpit;
+    private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit, dodajOcjenuZaObjekatUpit, objektiZaDisciplinuUpit;
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
-    private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit;
+    private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit, ocjeneZaObjekatUpit, disciplineUpit;
 
     private Connection conn;
 
@@ -90,6 +90,9 @@ public class FitpassDAO {
             korisnikUpit = conn.prepareStatement("SELECT o.osoba_id, o.ime, o.prezime, o.username, o.password FROM osoba o WHERE o.osoba_id=?");
             izbrisiObjekatOcjenaUpit = conn.prepareStatement("DELETE FROM objekat_ocjena WHERE objekat_id=?");
             dodajOcjenuZaObjekatUpit = conn.prepareStatement("INSERT INTO objekat_ocjena VALUES(?,?)");
+            objektiZaDisciplinuUpit = conn.prepareStatement("SELECT o.objekat_id, o.naziv, o.opcina, o.adresa FROM objekat o, objekat_disciplina od, disciplina d WHERE o.objekat_id=od.objekat_id AND od.disciplina_id=d.disciplina_id AND d.disciplina_id=?");
+            ocjeneZaObjekatUpit = conn.prepareStatement("SELECT c.iznos FROM objekat o, objekat_ocjena oc, ocjena c WHERE o.objekat_id=? AND o.objekat_id=oc.objekat_id AND oc.ocjena_id=c.ocjena_id");
+            disciplineUpit = conn.prepareStatement("SELECT * FROM disciplina");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -695,5 +698,51 @@ public class FitpassDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public ArrayList<Object> getObjectsForDiscipline(int disciplineId) {
+        //ova metoda ce na osnovu id discipline vracati listu svih objekata u kojim je ta disciplina moguca
+        ArrayList<Object> objects = new ArrayList<>();
+        try {
+            objektiZaDisciplinuUpit.setInt(1, disciplineId);
+            ResultSet result = objektiZaDisciplinuUpit.executeQuery();
+            while (result.next())
+                objects.add(new Object(result.getInt(1), result.getString(2), result.getString(3), result.getString(4)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return objects;
+    }
+
+    public Double averageRate(int objectId) {
+        //ova metoda ce ucitati sve ocjene za neki objekat i izracunati njihov prosjek
+        double averageRate = 0;
+        int vel = 0;
+        try {
+            ocjeneZaObjekatUpit.setInt(1, objectId);
+            ResultSet result = ocjeneZaObjekatUpit.executeQuery();
+            while (result.next()) {
+                averageRate += result.getDouble(1);
+                vel++;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return averageRate/vel;
+    }
+
+    public ArrayList<Discipline> getAllDisciplines(){
+        ArrayList<Discipline> tmp = new ArrayList<>();
+        try {
+            ResultSet result = disciplineUpit.executeQuery();
+            while (result.next())
+                tmp.add(new Discipline(result.getInt(1), result.getString(2)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tmp;
     }
 }
