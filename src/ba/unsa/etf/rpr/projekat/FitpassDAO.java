@@ -645,4 +645,20 @@ public class FitpassDAO {
 
         return notifications;
     }
+
+    public void editProfil(String user, String newName, String newSurname, String newUsername, String newPassword) {
+        //potrebno je pronaci osobu na osnovu username
+        int personId = getIdForUsername(user);
+        try {
+            izmijeniKorisnika.setString(1, newName);
+            izmijeniKorisnika.setString(2, newSurname);
+            izmijeniKorisnika.setString(3, newUsername);
+            izmijeniKorisnika.setString(4, newPassword);
+            izmijeniKorisnika.setInt(5, personId);
+
+            izmijeniKorisnika.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

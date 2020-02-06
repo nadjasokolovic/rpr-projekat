@@ -67,11 +67,13 @@ public class UserAccountController {
 
     public void editProfil(ActionEvent actionEvent) {
         FitpassDAO dao = FitpassDAO.getInstance();
-        SignupController ctrl = new SignupController(dao);
+        EditProfilController ctrl = new EditProfilController(dao);
 
         ResourceBundle bundle = ResourceBundle.getBundle("Translation");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/signup.fxml"), bundle);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/editprofil.fxml"), bundle);
         loader.setController(ctrl);
+        //prosljedjivanje korisnika u EditProfilCOntroller
+        ctrl.setUser(this.getUsername());
         Stage myStage = new Stage();
         Parent root = null;
         try {
