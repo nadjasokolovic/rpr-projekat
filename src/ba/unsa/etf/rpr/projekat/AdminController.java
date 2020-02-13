@@ -16,9 +16,11 @@ import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class AdminController {
     //tab korisnici
@@ -454,7 +456,39 @@ public class AdminController {
     }
 
     public void extendMembershipFee(ActionEvent actionEvent) {
-        //samo u bazi datim isteka i uplate clanarine produziti
+        //Trenutno izabranom korisniku
+        //1. postaviti datum pocetka clanarine na danasnji datum
+        //2. postaviti datum isteka na danasnji datum + 30
+        //3. postaviti broj ukupnih termina na onaj broj koji admin unese sa tastature
+        //4. postaviti broj iskoristenih termina na 0
+
+        //Danasnji datum
+        LocalDate currentDate = LocalDate.now();
+        //Formiranje stringa koji ce se upisivati u bazu
+        String start = Integer.toString(currentDate.getDayOfMonth()) + "." + Integer.toString(currentDate.getMonth().getValue()) + "." +
+                       Integer.toString(currentDate.getYear()) + ".";
+
+        //Uvecavamo datum za 30 dana
+        currentDate.plusDays(30);
+        String end = Integer.toString(currentDate.getDayOfMonth()) + "." + Integer.toString(currentDate.getMonth().getValue()) + "." +
+                Integer.toString(currentDate.getYear()) + ".";
+
+        //Radi se unos sa tastature jer admin zna koji je tip clanarine uplacen
+        //To se sve vrsi izvan ove aplikacije
+        System.out.println("Unesite broj termina za korisnika: ");
+        Scanner input = new Scanner(System.in);
+        int number = input.nextInt();
+        if(number != 12 && number != 16 && number != 20)
+            throw new IllegalArgumentException("Uneseni broj termina je neispravan.");
+
+        dao.extendMembershipFee(user.getValue().getId(), start, end, number);
+        //POSLATI OBAVJESTENJE ZA KORISNIKA
+        //Obavijestiti admina o uspjesnoj evidenciji clanarine
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Evidencija članarine");
+        alert.setHeaderText("");
+        alert.setContentText("Uspješno ste evidentirali članarinu za korisnika.");
+        alert.showAndWait();
     }
 
     public void goToProfil(ActionEvent actionEvent) {

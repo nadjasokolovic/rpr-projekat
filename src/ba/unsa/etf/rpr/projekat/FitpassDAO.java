@@ -34,7 +34,7 @@ public class FitpassDAO {
     private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit, dodajOcjenuZaObjekatUpit, objektiZaDisciplinuUpit;
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
     private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit, ocjeneZaObjekatUpit, disciplineUpit;
-    private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit, azurirajTreningKorisnikaUpit;
+    private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit, azurirajTreningKorisnikaUpit, evidentirajClanarinu;
 
     private Connection conn;
 
@@ -99,6 +99,7 @@ public class FitpassDAO {
             idObjektaZaNazivUpit = conn.prepareStatement("SELECT o.objekat_id FROM objekat o WHERE o.naziv=?");
             treninziZaObjekatUpit = conn.prepareStatement("SELECT t.trening_id, t.pocetak, t.kraj, t.dan FROM trening t WHERE t.objekat_id=? AND t.dan=?");
             azurirajTreningKorisnikaUpit = conn.prepareStatement("UPDATE korisnik SET trening_id=?, iskoristeno_termina=? WHERE korisnik_id=?");
+            evidentirajClanarinu = conn.prepareStatement("UPDATE korisnik SET pocetak_clanarine=?, kraj_clanarine=?, ukupno_termina=?, iskoristeno_termina=? WHERE osoba_id=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -824,5 +825,19 @@ public class FitpassDAO {
             }
         }
         return successful;
+    }
+
+    public void extendMembershipFee(int userId, String start, String end, int number) {
+        try {
+            evidentirajClanarinu.setString(1, start);
+            evidentirajClanarinu.setString(2, end);
+            evidentirajClanarinu.setInt(3, number);
+            evidentirajClanarinu.setInt(4, 0);
+            evidentirajClanarinu.setInt(5, userId);
+
+            evidentirajClanarinu.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

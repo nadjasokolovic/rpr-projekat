@@ -86,8 +86,6 @@ public class ObjectController {
     }
 
     public void makeReservation(ActionEvent actionEvent) {
-        //treba upisati rezervaciju u bazu i otvorit alert na kojem pise uspjesno ste rezervisali
-
         //Posto korisnik moze rezervisati samo jedan trening za jedan dan, dovoljno je samo azurirati kolonu trening_id u tabeli Korisnik
         //tacnije postaviti na id novoizabranog treninga
         //I potrebno je povecati broj iskoristenih termina za 1
