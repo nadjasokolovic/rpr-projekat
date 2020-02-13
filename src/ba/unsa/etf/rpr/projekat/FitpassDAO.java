@@ -34,7 +34,7 @@ public class FitpassDAO {
     private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit, dodajOcjenuZaObjekatUpit, objektiZaDisciplinuUpit;
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
     private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit, ocjeneZaObjekatUpit, disciplineUpit;
-    private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit, azurirajTreningKorisnikaUpit, evidentirajClanarinu;
+    private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit, azurirajTreningKorisnikaUpit, evidentirajClanarinu, maxObavijestIDUpit, dodajObavijestUpit;
 
     private Connection conn;
 
@@ -60,6 +60,7 @@ public class FitpassDAO {
             maxOsobaIDUpit = conn.prepareStatement("SELECT MAX(osoba_id)+1 FROM osoba");
             dodajKorisnikaUpit = conn.prepareStatement("INSERT INTO korisnik VALUES(?,?,?,?,?,?,?)");
             maxKorisnikIDUpit = conn.prepareStatement("SELECT MAX(korisnik_id)+1 FROM korisnik");
+            maxObavijestIDUpit = conn.prepareStatement("SELECT MAX(obavijest_id)+1 FROM obavijest");
             provjraUsernameUpit = conn.prepareStatement("SELECT o.osoba_id FROM osoba o WHERE o.username=?");
             azurirajPasswordUpit = conn.prepareStatement("UPDATE osoba SET password=? WHERE osoba_id=?");
             dajKorisnikaUpit = conn.prepareStatement("SELECT o.password FROM osoba o WHERE o.username=?");
@@ -100,6 +101,7 @@ public class FitpassDAO {
             treninziZaObjekatUpit = conn.prepareStatement("SELECT t.trening_id, t.pocetak, t.kraj, t.dan FROM trening t WHERE t.objekat_id=? AND t.dan=?");
             azurirajTreningKorisnikaUpit = conn.prepareStatement("UPDATE korisnik SET trening_id=?, iskoristeno_termina=? WHERE korisnik_id=?");
             evidentirajClanarinu = conn.prepareStatement("UPDATE korisnik SET pocetak_clanarine=?, kraj_clanarine=?, ukupno_termina=?, iskoristeno_termina=? WHERE osoba_id=?");
+            dodajObavijestUpit = conn.prepareStatement("INSERT INTO obavijest VALUES(?,?,?)");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -211,6 +213,19 @@ public class FitpassDAO {
     private int getDisciplineId() {
         try {
             ResultSet result = maxDisciplinaIDUpit.executeQuery();
+            if(result.next()) {
+                return result.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; //nikada nece vratiti
+    }
+
+    private int getNotificationId() {
+        try {
+            ResultSet result = maxObavijestIDUpit.executeQuery();
             if(result.next()) {
                 return result.getInt(1);
             }
@@ -827,15 +842,29 @@ public class FitpassDAO {
         return successful;
     }
 
-    public void extendMembershipFee(int userId, String start, String end, int number) {
+    public void extendMembershipFee(int personId, String start, String end, int number) {
         try {
+            int id = getUserIdForPersonId(personId);
             evidentirajClanarinu.setString(1, start);
             evidentirajClanarinu.setString(2, end);
             evidentirajClanarinu.setInt(3, number);
             evidentirajClanarinu.setInt(4, 0);
-            evidentirajClanarinu.setInt(5, userId);
+            evidentirajClanarinu.setInt(5, id);
 
             evidentirajClanarinu.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addNotification(int personId, String notification) {
+        try {
+            int id = getUserIdForPersonId(personId);
+            dodajObavijestUpit.setInt(1, getNotificationId());
+            dodajObavijestUpit.setString(2, notification);
+            dodajObavijestUpit.setInt(3, id);
+
+            dodajObavijestUpit.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,7 +1,6 @@
 package ba.unsa.etf.rpr.projekat;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,7 +18,7 @@ public class UserAccountController {
 
     private String username;
     private int numberOfTrainings, numberOfTrainingsUsed;
-    private ArrayList<String> obavijesti;
+    private ArrayList<String> notifications = new ArrayList<>();
 
     public String getUsername() {
         return username;
@@ -46,12 +44,12 @@ public class UserAccountController {
         this.numberOfTrainingsUsed = numberOfTrainingsUsed;
     }
 
-    public ArrayList<String> getObavijesti() {
-        return obavijesti;
+    public ArrayList<String> getNotifications() {
+        return notifications;
     }
 
-    public void setObavijesti(ArrayList<String> obavijesti) {
-        this.obavijesti = obavijesti;
+    public void setNotifications(ArrayList<String> notifications) {
+        this.notifications = notifications;
     }
 
     public Label usernameLabel;
@@ -127,6 +125,9 @@ public class UserAccountController {
         this.usernameLabel.setText(this.getUsername());
         this.iskoristenoTermina.setText(Integer.toString(this.getNumberOfTrainingsUsed()));
         this.preostaloTermina.setText(Integer.toString(this.getNumberOfTrainings()));
-        notificationsList.setItems(FXCollections.observableArrayList(this.getObavijesti()));
+        int personId = dao.getIdForUsername(this.username);
+        int userId = dao.getUserIdForPersonId(personId);
+        System.out.println(dao.getNotifications(userId).size());
+        notificationsList.setItems(FXCollections.observableArrayList(dao.getNotifications(userId)));
     }
 }

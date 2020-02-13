@@ -76,7 +76,7 @@
                      <padding>
                         <Insets right="5.0" />
                      </padding></Label>
-                  <Label text="%obavijesti" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                  <Label text="%notifications" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>

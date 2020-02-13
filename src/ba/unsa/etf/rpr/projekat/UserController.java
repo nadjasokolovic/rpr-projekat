@@ -11,14 +11,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.ResourceBundle;
 
 public class UserController {
@@ -108,7 +104,7 @@ public class UserController {
         ctrl.setUsername(this.getUsername());
         ctrl.setNumberOfTrainings(ukupnoTermina - brojIskoristenihTermina);
         ctrl.setNumberOfTrainingsUsed(brojIskoristenihTermina);
-        ctrl.setObavijesti(obavijesti);
+        ctrl.setNotifications(obavijesti);
     }
 
     private void sendDataToObjectController(ObjectController ctrl){

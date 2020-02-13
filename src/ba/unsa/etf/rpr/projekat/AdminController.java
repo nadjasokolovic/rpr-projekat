@@ -7,19 +7,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class AdminController {
@@ -449,7 +443,7 @@ public class AdminController {
     }
 
     public void checkActivity(ActionEvent actionEvent) {
-        //treba ucitati podatke i provjeiti je li korisnik uplacivao clanarinu u proteklih 3 mjeseca
+        //treba ucitati podatke i provjeriti je li korisnik uplacivao clanarinu u proteklih 3 mjeseca
         //otvoriti confirm prozor gdje ce se pitati admina da li zeli dodijeliti dodatne termine
 
         //ako admin dodijeli treba upisati u listu obavijesti korisnika da je dobio nove termine
@@ -461,12 +455,16 @@ public class AdminController {
         //2. postaviti datum isteka na danasnji datum + 30
         //3. postaviti broj ukupnih termina na onaj broj koji admin unese sa tastature
         //4. postaviti broj iskoristenih termina na 0
+        //5. postaviti u korisniku da je platio clanarinu za trenutni mjesec
 
         //Danasnji datum
         LocalDate currentDate = LocalDate.now();
         //Formiranje stringa koji ce se upisivati u bazu
         String start = Integer.toString(currentDate.getDayOfMonth()) + "." + Integer.toString(currentDate.getMonth().getValue()) + "." +
                        Integer.toString(currentDate.getYear()) + ".";
+
+        //Registracija clanarine za trenutni mjesec
+        user.getValue().registerMembershipFee(currentDate.getMonth().getValue());
 
         //Uvecavamo datum za 30 dana
         currentDate.plusDays(30);
@@ -482,7 +480,10 @@ public class AdminController {
             throw new IllegalArgumentException("Uneseni broj termina je neispravan.");
 
         dao.extendMembershipFee(user.getValue().getId(), start, end, number);
+
         //POSLATI OBAVJESTENJE ZA KORISNIKA
+        dao.addNotification(user.getValue().getId(), "Vaša članarina je evidentirana " + start);
+
         //Obavijestiti admina o uspjesnoj evidenciji clanarine
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Evidencija članarine");
@@ -554,6 +555,6 @@ public class AdminController {
         ctrl.setUsername(this.getUsername());
         ctrl.setNumberOfTrainings(ukupnoTermina - brojIskoristenihTermina);
         ctrl.setNumberOfTrainingsUsed(brojIskoristenihTermina);
-        ctrl.setObavijesti(obavijesti);
+        ctrl.setNotifications(obavijesti);
     }
 }

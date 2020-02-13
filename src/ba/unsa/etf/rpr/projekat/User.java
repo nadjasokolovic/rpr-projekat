@@ -9,8 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class User extends Person {
-
-    private enum Months {
+    public enum Months {
         JANUAR(),
         FEBRUAR(),
         MART(),
@@ -129,5 +128,45 @@ public class User extends Person {
         this.activity = activity;
     }
 
+    public void registerMembershipFee(int month) {
+        switch (month) {
+            case 1:
+                Months.JANUAR.setPaidMembershipFee(true);
+                break;
+            case 2:
+                Months.FEBRUAR.setPaidMembershipFee(true);
+                break;
+            case 3:
+                Months.MART.setPaidMembershipFee(true);
+                break;
+            case 4:
+                Months.APRIL.setPaidMembershipFee(true);
+                break;
+            case 5:
+                Months.MAJ.setPaidMembershipFee(true);
+                break;
+            case 6:
+                Months.JUNI.setPaidMembershipFee(true);
+                break;
+            case 7:
+                Months.JULI.setPaidMembershipFee(true);
+                break;
+            case 8:
+                Months.AUGUST.setPaidMembershipFee(true);
+                break;
+            case 9:
+                Months.SEPTEMBAR.setPaidMembershipFee(true);
+                break;
+            case 10:
+                Months.OKTOBAR.setPaidMembershipFee(true);
+                break;
+            case 11:
+                Months.NOVEMBAR.setPaidMembershipFee(true);
+                break;
+            case 12:
+                Months.DECEMBAR.setPaidMembershipFee(true);
+                break;
+        }
+    }
 
 }
