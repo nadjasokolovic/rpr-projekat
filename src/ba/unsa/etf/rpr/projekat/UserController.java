@@ -117,6 +117,9 @@ public class UserController {
             ctrl.setObjectName(selectedObject.getValue().getName());
             ctrl.setObjectRate(Double.toString(dao.averageRate(selectedObject.getValue().getId())));
         }
+        //postavljanje podataka o trenutno prijavljenom korisniku
+        ctrl.setUsername(username);
+        ctrl.setPassword(pasword);
     }
 
     public void openObjectController(ActionEvent actionEvent) {

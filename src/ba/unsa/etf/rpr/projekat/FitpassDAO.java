@@ -34,7 +34,7 @@ public class FitpassDAO {
     private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit, dodajOcjenuZaObjekatUpit, objektiZaDisciplinuUpit;
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
     private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit, ocjeneZaObjekatUpit, disciplineUpit;
-    private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit;
+    private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit, azurirajTreningKorisnikaUpit;
 
     private Connection conn;
 
@@ -98,6 +98,7 @@ public class FitpassDAO {
             disciplineUpit = conn.prepareStatement("SELECT * FROM disciplina");
             idObjektaZaNazivUpit = conn.prepareStatement("SELECT o.objekat_id FROM objekat o WHERE o.naziv=?");
             treninziZaObjekatUpit = conn.prepareStatement("SELECT t.trening_id, t.pocetak, t.kraj, t.dan FROM trening t WHERE t.objekat_id=? AND t.dan=?");
+            azurirajTreningKorisnikaUpit = conn.prepareStatement("UPDATE korisnik SET trening_id=?, iskoristeno_termina=? WHERE korisnik_id=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -800,5 +801,28 @@ public class FitpassDAO {
         }
 
         return -1;
+    }
+
+    public int reserveTraining(int userId, int trainingId) {
+        int successful = 1; //1 - moguca rezervacija jer ima dovoljno neiskoristenih termina
+        int ukupno = getNumberOfTermins(userId);
+        int iskoristeno = getNumberTerminsUsed(userId);
+        //Provjera da li ima dovoljno neiskoristenih termina
+        if(iskoristeno >= ukupno)
+            successful = 2; //2 - rezervacija nije moguca jer nema dovoljno neiskoristenih termina
+
+        if(successful == 1){
+            try {
+                azurirajTreningKorisnikaUpit.setInt(1, trainingId);
+                azurirajTreningKorisnikaUpit.setInt(2, iskoristeno + 1);
+                azurirajTreningKorisnikaUpit.setInt(3, userId);
+
+                azurirajTreningKorisnikaUpit.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                successful = 3; //3 - greska pri radu sa bazom
+            }
+        }
+        return successful;
     }
 }
