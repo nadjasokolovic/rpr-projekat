@@ -9,6 +9,8 @@ import javafx.scene.control.Alert;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.*;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FitpassDAO {
@@ -32,6 +34,7 @@ public class FitpassDAO {
     private PreparedStatement izbrisiObjekatDisciplinaUpit, izbrisiObjekatUpit, dodajOcjenuZaObjekatUpit, objektiZaDisciplinuUpit;
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
     private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit, ocjeneZaObjekatUpit, disciplineUpit;
+    private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit;
 
     private Connection conn;
 
@@ -93,6 +96,8 @@ public class FitpassDAO {
             objektiZaDisciplinuUpit = conn.prepareStatement("SELECT o.objekat_id, o.naziv, o.opcina, o.adresa FROM objekat o, objekat_disciplina od, disciplina d WHERE o.objekat_id=od.objekat_id AND od.disciplina_id=d.disciplina_id AND d.disciplina_id=?");
             ocjeneZaObjekatUpit = conn.prepareStatement("SELECT c.iznos FROM objekat o, objekat_ocjena oc, ocjena c WHERE o.objekat_id=? AND o.objekat_id=oc.objekat_id AND oc.ocjena_id=c.ocjena_id");
             disciplineUpit = conn.prepareStatement("SELECT * FROM disciplina");
+            idObjektaZaNazivUpit = conn.prepareStatement("SELECT o.objekat_id FROM objekat o WHERE o.naziv=?");
+            treninziZaObjekatUpit = conn.prepareStatement("SELECT t.trening_id, t.pocetak, t.kraj, t.dan FROM trening t WHERE t.objekat_id=? AND t.dan=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -718,7 +723,7 @@ public class FitpassDAO {
 
     public Double averageRate(int objectId) {
         //ova metoda ce ucitati sve ocjene za neki objekat i izracunati njihov prosjek
-        double averageRate = 0;
+        double averageRate = 0, average = 0;
         int vel = 0;
         try {
             ocjeneZaObjekatUpit.setInt(1, objectId);
@@ -727,11 +732,18 @@ public class FitpassDAO {
                 averageRate += result.getDouble(1);
                 vel++;
             }
+
+            average = averageRate / vel;
+            //Zaokruzivanje na dvije decimale
+            average = Math.round(average * 100);
+            average /= 100;
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return averageRate/vel;
+        return average;
     }
 
     public ArrayList<Discipline> getAllDisciplines(){
@@ -744,5 +756,49 @@ public class FitpassDAO {
             e.printStackTrace();
         }
         return tmp;
+    }
+
+    public ArrayList<Training> getTrainingsOnDay(String objectName, String dayOfWeek) {
+        ArrayList<Training> trainings = new ArrayList<>();
+        //prvo je potrebno pronaci id objekta na osnovu naziva
+        int objectId = getObjectIdForName(objectName);
+
+        //zatim pronalazimo sve treninge u tabeli Trening koji su vezani za taj objekat
+        try {
+            treninziZaObjekatUpit.setInt(1, objectId);
+            treninziZaObjekatUpit.setString(2, dayOfWeek);
+            ResultSet result = treninziZaObjekatUpit.executeQuery();
+            while (result.next()){
+                int id = result.getInt(1);
+                //u bazi su pocetak i kraj dati u formatu hh:mm(npr. 10:00)
+                // dodat cu jos :00 za sekunde i onda cu takvo vrijeme moci slati u konstruktor LocalTime
+                DateTimeFormatter parser = DateTimeFormatter.ofPattern("HH:mm");
+
+                String pocetak = result.getString(2);
+                LocalTime start = LocalTime.parse(pocetak, parser);
+                String kraj = result.getString(3);
+                LocalTime end = LocalTime.parse(kraj, parser);
+
+                String day = result.getString(4);
+
+                //poslat cu null kao parametar za user-a jer za ovaj dio to nije bitno
+                trainings.add(new Training(id, start, end, null, day));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return trainings;
+    }
+
+    private int getObjectIdForName(String objectName) {
+        try {
+            idObjektaZaNazivUpit.setString(1, objectName);
+            return idObjektaZaNazivUpit.executeQuery().getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
     }
 }

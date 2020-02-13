@@ -1,29 +1,42 @@
 package ba.unsa.etf.rpr.projekat;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class ObjectController {
-
-    public TextField objectRatingFld;
-    public TableView personTableView;
+    public TableView trainingTableView;
     public TableColumn startColumn;
     public TableColumn endColumn;
     public Button reserveBtn;
+    public Label rateLabel;
+    public Label objectNameLabel;
 
     FitpassDAO dao = FitpassDAO.getInstance();
+
+    //atributi koji ce sluziti za postavljanje podataka trenutnog objekta
+    private String objectName;
+    private String objectRate;
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
+
+    public void setObjectRate(String objectRate) {
+        this.objectRate = objectRate;
+    }
 
     public ObjectController(FitpassDAO dao) {
         this.dao = dao;
@@ -31,20 +44,36 @@ public class ObjectController {
 
     @FXML
     public void initialize() {
-        objectRatingFld.textProperty().addListener((obs, oldRate, newRate) -> {
-            if (dao.getValidation().validateGrade(newRate)) {
-                objectRatingFld.getStyleClass().removeAll("poljeNijeIspravno");
-                objectRatingFld.getStyleClass().add("poljeIspravno");
-            } else {
-                objectRatingFld.getStyleClass().removeAll("poljeIspravno");
-                objectRatingFld.getStyleClass().add("poljeNijeIspravno");
-            }
-        });
+        objectNameLabel.setText(objectName);
+        rateLabel.setText(objectRate);
+
+        //Inicijalizacija tabele
+        //iz baze je potrebno ucitati sve treninge za trenutni objekat i danasnji dan
+
+        LocalDate currentDate = LocalDate.now();
+        DayOfWeek day = currentDate.getDayOfWeek(); //vracat ce naziv dana, sve velikim slovima (npr. FRIDAY), a tako sam i u bazi dane pisala
+
+
+        trainingTableView.setItems(FXCollections.observableArrayList(dao.getTrainingsOnDay(objectNameLabel.getText(), day.toString())));
+
+        //Placeholder ukoliko nema elemenata u tabeli
+        trainingTableView.setPlaceholder(new Label("Žao nam je, u ovom objektu danas nema treninga za Vašu disciplinu."));
+
+        //postavljanje cellValueFactorija
+        startColumn.setCellValueFactory(new PropertyValueFactory<>("startOfTraining"));
+        endColumn.setCellValueFactory(new PropertyValueFactory<>("endOfTraining"));
+
     }
 
     public void makeReservation(ActionEvent actionEvent) {
         //treba upisati rezervaciju u bazu i otvorit alert na kojem pise uspjesno ste rezervisali
         //korisnik je odustao od uredjivanja profila i nema potrebe za upisivanjem u bazu
+        Node n = (Node) actionEvent.getSource();
+        Stage stage = (Stage) n.getScene().getWindow();
+        stage.close();
+    }
+
+    public void closeWindow(ActionEvent actionEvent) {
         Node n = (Node) actionEvent.getSource();
         Stage stage = (Stage) n.getScene().getWindow();
         stage.close();

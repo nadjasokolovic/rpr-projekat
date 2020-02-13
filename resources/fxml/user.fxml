@@ -61,21 +61,21 @@
                     <rowConstraints>
                         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                     </rowConstraints>
-               <children>
-                  <Label prefHeight="21.0" prefWidth="155.0" text="%izborDiscipline" GridPane.columnIndex="1" />
-                  <ChoiceBox fx:id="disciplineChoice" prefHeight="31.0" prefWidth="231.0" styleClass="disciplineChoice" stylesheets="@../css/style.css" GridPane.columnIndex="2" />
-                  <ListView fx:id="objectsList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                     <padding>
-                        <Insets bottom="5.0" />
-                     </padding>
+                    <children>
+                        <Label prefHeight="21.0" prefWidth="155.0" text="%izborDiscipline" GridPane.columnIndex="1" />
+                        <ChoiceBox fx:id="disciplineChoice" prefHeight="31.0" prefWidth="231.0" styleClass="disciplineChoice" stylesheets="@../css/style.css" GridPane.columnIndex="2" />
+                        <ListView fx:id="objectsList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                            <padding>
+                                <Insets bottom="5.0" />
+                            </padding>
                      <GridPane.margin>
-                        <Insets bottom="10.0" top="5.0" />
+                        <Insets bottom="8.0" top="8.0" />
                      </GridPane.margin>
-                  </ListView>
-                  <Button mnemonicParsing="false" prefWidth="70.0" styleClass="addBtn" stylesheets="@../css/style.css" text="OK" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-               </children>
+                        </ListView>
+                  <Button mnemonicParsing="false" onAction="#openObjectController" prefWidth="70.0" styleClass="addBtn" stylesheets="@../css/style.css" text="OK" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                    </children>
                 </GridPane>
             </children>
             <padding>

@@ -1,5 +1,6 @@
 package ba.unsa.etf.rpr.projekat;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,6 +25,7 @@ public class UserController {
 
     public ListView objectsList;
     public ChoiceBox disciplineChoice;
+    public SimpleObjectProperty<Object> selectedObject = new SimpleObjectProperty<>();
 
     FitpassDAO dao = FitpassDAO.getInstance();
 
@@ -52,14 +54,19 @@ public class UserController {
     @FXML
     public void initialize() {
         disciplineChoice.setItems(FXCollections.observableArrayList(dao.getAllDisciplines()));
-        disciplineChoice.getSelectionModel().selectFirst();
+        //selectedObject.set(null);
 
         disciplineChoice.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-                ArrayList<Object> tmp = dao.getObjectsForDiscipline(((Discipline)disciplineChoice.getItems().get((Integer) number2)).getId());
-                objectsList.setItems(FXCollections.observableArrayList(tmp));
+                ArrayList<Object> objects = dao.getObjectsForDiscipline(((Discipline)disciplineChoice.getItems().get((Integer) number2)).getId());
+                objectsList.setItems(FXCollections.observableArrayList(objects));
             }
+        });
+
+        //postavljanje trenutnog objekta
+        objectsList.getSelectionModel().selectedItemProperty().addListener((obs, oldObject, newObject) -> {
+            selectedObject.set((Object)objectsList.getSelectionModel().getSelectedItem());
         });
     }
 
@@ -103,4 +110,30 @@ public class UserController {
         ctrl.setNumberOfTrainingsUsed(brojIskoristenihTermina);
         ctrl.setObavijesti(obavijesti);
     }
+
+    private void sendDataToObjectController(ObjectController ctrl){
+        if(selectedObject != null){
+            //potrebno je naziv objekta i njegovu prosjecnu ocjenu poslati u ObjectController
+            ctrl.setObjectName(selectedObject.getValue().getName());
+            ctrl.setObjectRate(Double.toString(dao.averageRate(selectedObject.getValue().getId())));
+        }
+    }
+
+    public void openObjectController(ActionEvent actionEvent) {
+        FitpassDAO dao = FitpassDAO.getInstance();
+        ObjectController ctrl = new ObjectController(dao);
+        ResourceBundle bundle = ResourceBundle.getBundle("Translation");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/object.fxml"), bundle);
+        loader.setController(ctrl);
+        sendDataToObjectController(ctrl);
+        Stage myStage = new Stage();
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        myStage.setTitle("Fitpass Sarajevo");
+        myStage.setScene(new Scene(root, 700, 500));
+        myStage.show();    }
 }
