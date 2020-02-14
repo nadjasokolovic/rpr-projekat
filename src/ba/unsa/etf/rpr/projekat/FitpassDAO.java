@@ -6,8 +6,7 @@ import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 import javafx.scene.control.Alert;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -313,10 +312,28 @@ public class FitpassDAO {
             dodajKorisnikaUpit.setInt(7, 0);
 
             dodajKorisnikaUpit.executeUpdate();
+
+            //Ovaj korisnik ce se upisati i u datoteku persons.txt
+            saveInFile(user);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void saveInFile(User user) {
+        File file = new File("persons.txt");
+        FileWriter fr = null;
+        try {
+            fr = new FileWriter(file, true);
+            BufferedWriter br = new BufferedWriter(fr);
+            br.write("\n" + user.getName() + " " + user.getSurname());
+
+            br.close();
+            fr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean checkUsername(String username) {
