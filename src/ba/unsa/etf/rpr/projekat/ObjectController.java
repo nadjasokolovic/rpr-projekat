@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -124,7 +125,20 @@ public class ObjectController {
                     stage.close();
                 }
             }
-            else if(successful == 3){
+            else if(successful == 3) {
+                //Obavijestiti korisnika o tome da mu je clanarina istekla
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Rezervacija treninga");
+                alert.setHeaderText("Rezervacija nije moguća!");
+                alert.setContentText("Vaša članarina više nije aktivna.");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK){
+                    Node n = (Node) actionEvent.getSource();
+                    Stage stage = (Stage) n.getScene().getWindow();
+                    stage.close();
+                }
+            }
+            else if(successful == 4){
                 //Obavijestiti korisnika o tome da se desila greska u bazi
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Rezervacija treninga");
@@ -153,6 +167,7 @@ public class ObjectController {
         ResourceBundle bundle = ResourceBundle.getBundle("Translation");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"), bundle);
         loader.setController(ctrl);
+        sendData(ctrl);
         Stage myStage = new Stage();
         Parent root = null;
         try {
@@ -163,5 +178,25 @@ public class ObjectController {
         myStage.setTitle("Fitpass Sarajevo");
         myStage.setScene(new Scene(root, 700, 500));
         myStage.show();
+    }
+
+    private void sendData(UserAccountController ctrl) {
+        //prvo na osnovu username koji je unique iz baze ucitavati id osobe
+        int personId = dao.getIdForUsername(this.username);
+        //potrebno je pronaci idKorisnika na osnovu id osobe
+        int userId = dao.getUserIdForPersonId(personId);
+
+        //iz tabele korisnik dobijamo podatke o broju iskoristenih termina i broju preostalih
+        int brojIskoristenihTermina = dao.getNumberTerminsUsed(userId);
+        //iz baze ucitavamo ukupan broj termina da bismo dobili broj preostalih
+        int ukupnoTermina = dao.getNumberOfTermins(userId);
+        //iz baze ucitavamo sve obavijesti za korisnika
+        ArrayList<String> obavijesti = dao.getNotifications(userId);
+
+        //slanje ovih podataka u userAccountController
+        ctrl.setUsername(this.username);
+        ctrl.setNumberOfTrainings(ukupnoTermina - brojIskoristenihTermina);
+        ctrl.setNumberOfTrainingsUsed(brojIskoristenihTermina);
+        ctrl.setNotifications(obavijesti);
     }
 }

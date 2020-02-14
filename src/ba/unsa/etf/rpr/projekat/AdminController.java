@@ -52,8 +52,6 @@ public class AdminController {
     public Label dayLabel;
     public ListView trainingsList;
 
-
-
     //za prosljedjivanje podataka
     private String username, password;
 
@@ -338,7 +336,6 @@ public class AdminController {
                 break;
         }
 
-        //Inicijalizacija tabele
         //iz baze je potrebno ucitati sve treninge za trenutni objekat i danasnji dan
         Map<User, Training> usersTrainingsMap = dao.getTrainingsForAllUsers(now.getDayOfWeek().toString());
         //Potrebno je formirati listu stringova koja sadrzi ime i prezime korisnika i rezervisani termin)

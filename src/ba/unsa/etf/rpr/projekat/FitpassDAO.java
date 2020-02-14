@@ -9,6 +9,7 @@ import javafx.scene.control.Alert;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -830,6 +831,14 @@ public class FitpassDAO {
         if(iskoristeno >= ukupno)
             successful = 2; //2 - rezervacija nije moguca jer nema dovoljno neiskoristenih termina
 
+        //Provjera da li je clanarina jos uvijek aktivna
+        LocalDate now = LocalDate.now();
+        String endMembershipFee = getEndOfMembershipFee(userId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.yyyy.");
+        LocalDate endLocalDate = LocalDate.parse(endMembershipFee, formatter);
+        if(endLocalDate.isBefore(now))
+            successful = 3;
+
         if(successful == 1){
             try {
                 azurirajTreningKorisnikaUpit.setInt(1, trainingId);
@@ -839,7 +848,7 @@ public class FitpassDAO {
                 azurirajTreningKorisnikaUpit.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
-                successful = 3; //3 - greska pri radu sa bazom
+                successful = 4; //3 - greska pri radu sa bazom
             }
         }
         return successful;
