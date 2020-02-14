@@ -482,9 +482,13 @@ public class AdminController {
         //treba ucitati podatke i provjeriti je li korisnik uplacivao clanarinu u proteklih 3 mjeseca
         //otvoriti confirm prozor gdje ce se pitati admina da li zeli dodijeliti dodatne termine
         ArrayList<Activity> activities = dao.getActivityForUser(this.user.getValue().getUsername());
+
         String tmp = "";
-        for(Activity a : activities)
+        for(Activity a : activities) {
+            if(a == null)
+                break;
             tmp += a.getMonth() + " " + a.getYear() + "\n";
+        }
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Provjera aktivnosti");

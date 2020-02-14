@@ -932,19 +932,21 @@ public class FitpassDAO {
     }
 
     public ArrayList<Activity> getActivityForUser(String username) {
-        ArrayList<Activity> userActivities = new ArrayList<>();
+        Activity[] userActivities = new Activity[10000];
         int personId = getIdForUsername(username);
         int userId = getUserIdForPersonId(personId);
         try {
             aktivnostKorisnikaUpit.setInt(1, userId);
             ResultSet result = aktivnostKorisnikaUpit.executeQuery();
+            int i = 0;
             while (result.next()) {
-                userActivities.add(new Activity(result.getInt(1), result.getString(2), result.getInt(3)));
+                userActivities[i] = new Activity(result.getInt(1), result.getString(2), result.getInt(3));
+                i++;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return userActivities;
+        return new ArrayList<Activity>(Arrays.asList(userActivities));
     }
 
     public void addFiveTrainings(String username) {
