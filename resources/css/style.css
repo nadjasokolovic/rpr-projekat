@@ -29,10 +29,10 @@
 }
 
 .poljeIspravno {
-    -fx-control-inner-background: greenyellow;
+    -fx-control-inner-background: adff2f;
 }
 .poljeNijeIspravno {
-    -fx-control-inner-background: lightpink;
+    -fx-control-inner-background: ffb6c1;
 }
 
 .bsBtn {
