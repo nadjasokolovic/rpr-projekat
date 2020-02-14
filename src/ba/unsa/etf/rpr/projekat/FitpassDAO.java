@@ -15,6 +15,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FitpassDAO {
+    //konstanta koja oznacava broj termina koje dobijaju aktivni korisnici
+    public final int numberOfFreeTrainings = 5;
+
     private Validation validation = new Validation();
 
     public Validation getValidation() {
@@ -756,17 +759,13 @@ public class FitpassDAO {
                 averageRate += result.getDouble(1);
                 vel++;
             }
-
             average = averageRate / vel;
             //Zaokruzivanje na dvije decimale
             average = Math.round(average * 100);
             average /= 100;
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return average;
     }
 
@@ -949,21 +948,17 @@ public class FitpassDAO {
         return new ArrayList<Activity>(Arrays.asList(userActivities));
     }
 
-    public void addFiveTrainings(String username) {
+    public void addTrainings(String username) {
         int personId = getIdForUsername(username);
         int userId = getUserIdForPersonId(personId);
         int number = getNumberOfTermins(userId);
         try {
-            dodajTermineUpit.setInt(1, number + 5);
+            dodajTermineUpit.setInt(1, number + this.numberOfFreeTrainings);
             dodajTermineUpit.setInt(2, userId);
 
             dodajTermineUpit.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public Connection getConn() {
-        return conn;
     }
 }

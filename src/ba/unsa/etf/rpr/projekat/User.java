@@ -8,7 +8,7 @@ import javafx.collections.ObservableList;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class User extends Person {
+public class User extends Person implements Comparable<User>{
     public enum Months {
         JANUAR(),
         FEBRUAR(),
@@ -173,4 +173,10 @@ public class User extends Person {
     public int hashCode() {
         return this.getName().hashCode();
     }
+
+    @Override
+    public int compareTo(User user) {
+        return this.getName().compareTo(user.getName());
+    }
+
 }

@@ -19,8 +19,6 @@ public class Object {
     private SimpleIntegerProperty id = new SimpleIntegerProperty();
     private ObservableSet<Training> trainingSchedule = FXCollections.observableSet();
     private ObservableList<Discipline> disciplinesInObject = FXCollections.observableArrayList();
-    //treninzi ce biti sortirani po vremenu pocetka od onog sto najranije pocinje do onog koji najkasnije pocinje, MOZDA NECE
-    //u ovaj skup ce se ucitavati iz baze treninzi za konkretan dan
 
     private int[] gradesFromUsers = new int[10000];
     private int numberOfGrades = 0;
@@ -116,9 +114,6 @@ public class Object {
     public void setId(int id) {
         this.id.set(id);
     }
-
-    //uraditi hashCode
-
 
     @Override
     public String toString() {

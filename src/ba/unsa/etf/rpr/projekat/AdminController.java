@@ -14,6 +14,7 @@ import javafx.util.converter.DoubleStringConverter;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Stream;
 
 
 public class AdminController {
@@ -479,8 +480,7 @@ public class AdminController {
     }
 
     public void checkActivity(ActionEvent actionEvent) {
-        //treba ucitati podatke i provjeriti je li korisnik uplacivao clanarinu u proteklih 3 mjeseca
-        //otvoriti confirm prozor gdje ce se pitati admina da li zeli dodijeliti dodatne termine
+        //Ucitava aktivnost za korisnika
         ArrayList<Activity> activities = dao.getActivityForUser(this.user.getValue().getUsername());
 
         String tmp = "";
@@ -498,10 +498,10 @@ public class AdminController {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             //treba dodati 5 termina korisniku
-            dao.addFiveTrainings(this.user.getValue().getUsername());
+            dao.addTrainings(this.user.getValue().getUsername());
             //treba upisati u listu obavijesti korisnika da je dobio termine
-            int persoId = dao.getIdForUsername(this.user.getValue().getUsername());
-            dao.addNotification(persoId, "Dobili ste 5 dodatnih termina.");
+            int personId = dao.getIdForUsername(this.user.getValue().getUsername());
+            dao.addNotification(personId, "Dobili ste 5 dodatnih termina.");
         }
     }
 

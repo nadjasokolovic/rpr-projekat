@@ -1,7 +1,14 @@
 package ba.unsa.etf.rpr.projekat;
 
 public class Validation {
+
+    private static<Tip> boolean validateLength(Tip length) {
+        return length.equals(4);
+    }
+
     public boolean validatePassword(String newPassword) {
+        if(validateLength(newPassword.length()))
+            return true;
         //validan password mora imati barem 4 znaka
         if(newPassword.length() < 4) return false;
 
@@ -72,11 +79,6 @@ public class Validation {
             if(!Character.isLetter(c) && c != '-' && c != ' ' )
                 return false;
         }
-        return true;
-    }
-
-    public boolean validate(String username, String password) {
-        //ova metoda ce provjeravati u bazi da li username i password pripadaju konkretnom korisniku
         return true;
     }
 }
