@@ -18,6 +18,8 @@ import javax.jws.soap.SOAPBinding;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AdminController {
     //tab korisnici
@@ -484,8 +486,24 @@ public class AdminController {
     public void checkActivity(ActionEvent actionEvent) {
         //treba ucitati podatke i provjeriti je li korisnik uplacivao clanarinu u proteklih 3 mjeseca
         //otvoriti confirm prozor gdje ce se pitati admina da li zeli dodijeliti dodatne termine
+        ArrayList<Activity> activities = dao.getActivityForUser(this.user.getValue().getUsername());
+        String tmp = "";
+        for(Activity a : activities)
+            tmp += a.getMonth() + " " + a.getYear() + "\n";
 
-        //ako admin dodijeli treba upisati u listu obavijesti korisnika da je dobio nove termine
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Provjera aktivnosti");
+        alert.setHeaderText("Aktivnost korisnika: " + this.user.getValue().getName() + " " + user.getValue().getSurname() + "\n" + tmp);
+        alert.setContentText("Želite li dodijeliti dodatne termine ovom korisniku?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            //treba dodati 5 termina korisniku
+            dao.addFiveTrainings(this.user.getValue().getUsername());
+            //treba upisati u listu obavijesti korisnika da je dobio termine
+            int persoId = dao.getIdForUsername(this.user.getValue().getUsername());
+            dao.addNotification(persoId, "Dobili ste 5 dodatnih termina.");
+        }
     }
 
     public void extendMembershipFee(ActionEvent actionEvent) {

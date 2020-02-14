@@ -36,7 +36,7 @@ public class FitpassDAO {
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
     private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit, ocjeneZaObjekatUpit, disciplineUpit;
     private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit, azurirajTreningKorisnikaUpit, evidentirajClanarinu, maxObavijestIDUpit, dodajObavijestUpit;
-    private PreparedStatement krajClanarineUpit, korisniciTreninziUpit, tipOsobeUpit;
+    private PreparedStatement krajClanarineUpit, korisniciTreninziUpit, tipOsobeUpit, aktivnostKorisnikaUpit, dodajTermineUpit;
 
     private Connection conn;
 
@@ -107,6 +107,8 @@ public class FitpassDAO {
             krajClanarineUpit = conn.prepareStatement("SELECT kraj_clanarine FROM korisnik WHERE korisnik_id=?");
             korisniciTreninziUpit = conn.prepareStatement("SELECT k.korisnik_id, o.ime, o.prezime, o.username, o.password, t.trening_id, t.pocetak, t.kraj, t.dan FROM osoba o, korisnik k, trening t WHERE o.osoba_id=k.osoba_id AND k.trening_id=t.trening_id AND t.dan=?");
             tipOsobeUpit = conn.prepareStatement("SELECT tip_osobe FROM osoba WHERE username=?");
+            aktivnostKorisnikaUpit = conn.prepareStatement("SELECT a.aktivnost_id, a.mjesec, a.godina FROM aktivnost a, korisnik_aktivnost ka, korisnik k WHERE k.korisnik_id=ka.korisnik_id AND ka.aktivnost_id=a.aktivnost_id AND k.korisnik_id=?");
+            dodajTermineUpit = conn.prepareStatement("UPDATE korisnik SET ukupno_termina=? WHERE korisnik_id=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -927,5 +929,35 @@ public class FitpassDAO {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public ArrayList<Activity> getActivityForUser(String username) {
+        ArrayList<Activity> userActivities = new ArrayList<>();
+        int personId = getIdForUsername(username);
+        int userId = getUserIdForPersonId(personId);
+        try {
+            aktivnostKorisnikaUpit.setInt(1, userId);
+            ResultSet result = aktivnostKorisnikaUpit.executeQuery();
+            while (result.next()) {
+                userActivities.add(new Activity(result.getInt(1), result.getString(2), result.getInt(3)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userActivities;
+    }
+
+    public void addFiveTrainings(String username) {
+        int personId = getIdForUsername(username);
+        int userId = getUserIdForPersonId(personId);
+        int number = getNumberOfTermins(userId);
+        try {
+            dodajTermineUpit.setInt(1, number + 5);
+            dodajTermineUpit.setInt(2, userId);
+
+            dodajTermineUpit.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
