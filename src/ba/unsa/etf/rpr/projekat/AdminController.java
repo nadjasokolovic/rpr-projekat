@@ -1,6 +1,7 @@
 package ba.unsa.etf.rpr.projekat;
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -8,13 +9,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 
+import javax.jws.soap.SOAPBinding;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class AdminController {
     //tab korisnici
@@ -46,7 +49,10 @@ public class AdminController {
     public ListView disciplinesList;
 
     //tab termini
+    public Label dayLabel;
     public ListView trainingsList;
+
+
 
     //za prosljedjivanje podataka
     private String username, password;
@@ -175,20 +181,17 @@ public class AdminController {
                 objectNameFld.textProperty().unbindBidirectional(oldObject.nameProperty());
                 objectMunicipalityFld.textProperty().unbindBidirectional(oldObject.municipalityProperty());
                 objectAdressFld.textProperty().unbindBidirectional(oldObject.adressProperty());
-                //objectRateFld.textProperty().unbindBidirectional(oldObject.averageRateProperty());
             }
             if (newObject == null) {
                 objectNameFld.setText("");
                 objectMunicipalityFld.setText("");
                 objectAdressFld.setText("");
-                //objectRateFld.setText("");
             }
             else {
                 objectNameFld.textProperty().bindBidirectional(newObject.nameProperty());
                 objectMunicipalityFld.textProperty().bindBidirectional(newObject.municipalityProperty());
                 objectAdressFld.textProperty().bindBidirectional(newObject.adressProperty());
                 StringConverter<? extends Number> converter = new DoubleStringConverter();
-                //objectRateFld.textProperty().bindBidirectional(newObject.averageRateProperty(), (StringConverter<Number>) converter);
             }
         });
 
@@ -307,6 +310,45 @@ public class AdminController {
                 disciplinesList.setItems(FXCollections.observableArrayList(tmp));
             }
         });
+        
+        //TAB treninzi
+        //postavljanje danasnjega dana na labelu
+        LocalDate now = LocalDate.now();
+        switch (now.getDayOfWeek()) {
+            case MONDAY:
+                dayLabel.setText("Ponedjeljak");
+                break;
+            case TUESDAY:
+                dayLabel.setText("Utorak");
+                break;
+            case WEDNESDAY:
+                dayLabel.setText("Srijeda");
+                break;
+            case THURSDAY:
+                dayLabel.setText("Cetvrtak");
+                break;
+            case FRIDAY:
+                dayLabel.setText("Petak");
+                break;
+            case SATURDAY:
+                dayLabel.setText("Subota");
+                break;
+            case SUNDAY:
+                dayLabel.setText("Nedjelja");
+                break;
+        }
+
+        //Inicijalizacija tabele
+        //iz baze je potrebno ucitati sve treninge za trenutni objekat i danasnji dan
+        Map<User, Training> usersTrainingsMap = dao.getTrainingsForAllUsers(now.getDayOfWeek().toString());
+        //Potrebno je formirati listu stringova koja sadrzi ime i prezime korisnika i rezervisani termin)
+        ArrayList<String> tmp = new ArrayList<>();
+        for (Map.Entry<User, Training> entry : usersTrainingsMap.entrySet()) {
+            //System.out.println(entry.getKey() + " = " + entry.getValue());
+            String s = entry.getKey().getName() + " " + entry.getKey().getSurname() + " (" + entry.getValue().getStartOfTraining() + "-" + entry.getValue().getEndOfTraining() + ")";
+            tmp.add(s);
+        }
+        trainingsList.setItems(FXCollections.observableArrayList(tmp));
     }
 
     public void addUser(ActionEvent actionEvent) {
@@ -490,26 +532,6 @@ public class AdminController {
         alert.setHeaderText("");
         alert.setContentText("Uspješno ste evidentirali članarinu za korisnika.");
         alert.showAndWait();
-    }
-
-    public void goToProfil(ActionEvent actionEvent) {
-//        FitpassDAO dao = FitpassDAO.getInstance();
-//        UserAccountController ctrl = new UserAccountController(dao);
-//
-//        ResourceBundle bundle = ResourceBundle.getBundle("Translation");
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userAccount.fxml"), bundle);
-//        loader.setController(ctrl);
-//        sendData(ctrl);
-//        Stage myStage = new Stage();
-//        Parent root = null;
-//        try {
-//            root = loader.load();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        myStage.setTitle("Fitpass Sarajevo");
-//        myStage.setScene(new Scene(root, 700, 500));
-//        myStage.show();
     }
 
     public void deleteDiscipline(ActionEvent actionEvent) {

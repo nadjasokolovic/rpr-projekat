@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS "objekat_ocjena" (
 	FOREIGN KEY("objekat_id") REFERENCES "objekat"("objekat_id"),
 	FOREIGN KEY("ocjena_id") REFERENCES "ocjena"("ocjena_id")
 );
-INSERT INTO "trening" VALUES (1,'MONDAY','9:00','10:00',1);
+INSERT INTO "trening" VALUES (1,'FRIDAY','9:00','10:00',1);
 INSERT INTO "trening" VALUES (2,'MONDAY','12:00','13:00',1);
 INSERT INTO "trening" VALUES (3,'TUESDAY','10:00','11:00',1);
 INSERT INTO "trening" VALUES (4,'TUESDAY','14:00','15:00',1);

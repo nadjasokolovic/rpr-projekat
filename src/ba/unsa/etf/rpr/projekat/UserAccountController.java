@@ -140,6 +140,7 @@ public class UserAccountController {
 
         long daysBetween = DAYS.between(now, endlocalDate);
         //ako je razlika manja od 7 dana treba poslati obavijest korisniku
+        if(daysBetween < 0) daysBetween *= -1;
         if(daysBetween <= 7)
             dao.addNotification(personId, "Vaša članarina ističe za " + daysBetween + " dana.");
 

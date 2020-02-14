@@ -169,4 +169,8 @@ public class User extends Person {
         }
     }
 
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
 }

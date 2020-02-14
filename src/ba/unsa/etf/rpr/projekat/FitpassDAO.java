@@ -35,7 +35,7 @@ public class FitpassDAO {
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
     private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit, ocjeneZaObjekatUpit, disciplineUpit;
     private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit, azurirajTreningKorisnikaUpit, evidentirajClanarinu, maxObavijestIDUpit, dodajObavijestUpit;
-    private PreparedStatement krajClanarineUpit;
+    private PreparedStatement krajClanarineUpit, korisniciTreninziUpit;
 
     private Connection conn;
 
@@ -104,6 +104,7 @@ public class FitpassDAO {
             evidentirajClanarinu = conn.prepareStatement("UPDATE korisnik SET pocetak_clanarine=?, kraj_clanarine=?, ukupno_termina=?, iskoristeno_termina=? WHERE osoba_id=?");
             dodajObavijestUpit = conn.prepareStatement("INSERT INTO obavijest VALUES(?,?,?)");
             krajClanarineUpit = conn.prepareStatement("SELECT kraj_clanarine FROM korisnik WHERE korisnik_id=?");
+            korisniciTreninziUpit = conn.prepareStatement("SELECT k.korisnik_id, o.ime, o.prezime, o.username, o.password, t.trening_id, t.pocetak, t.kraj, t.dan FROM osoba o, korisnik k, trening t WHERE o.osoba_id=k.osoba_id AND k.trening_id=t.trening_id AND t.dan=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -791,7 +792,7 @@ public class FitpassDAO {
                 int id = result.getInt(1);
                 //u bazi su pocetak i kraj dati u formatu hh:mm(npr. 10:00)
                 // dodat cu jos :00 za sekunde i onda cu takvo vrijeme moci slati u konstruktor LocalTime
-                DateTimeFormatter parser = DateTimeFormatter.ofPattern("HH:mm");
+                DateTimeFormatter parser = DateTimeFormatter.ofPattern("H:mm");
 
                 String pocetak = result.getString(2);
                 LocalTime start = LocalTime.parse(pocetak, parser);
@@ -880,5 +881,31 @@ public class FitpassDAO {
             e.printStackTrace();
         }
         return ""; //nece nikad vratiti ovo
+    }
+
+    public Map<User, Training> getTrainingsForAllUsers(String day) {
+        //Kljuc mape je korisnik koji je rezervisao trening, a vrijednost je rezervisani trening
+        Map<User, Training> tmp = new HashMap<>();
+
+        try {
+            korisniciTreninziUpit.setString(1, day);
+            ResultSet result = korisniciTreninziUpit.executeQuery();
+            while (result.next()) {
+                User u = new User(result.getInt(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5));
+
+                DateTimeFormatter parser = DateTimeFormatter.ofPattern("H:mm");
+                String pocetak = result.getString(7);
+                LocalTime start = LocalTime.parse(pocetak, parser);
+                String kraj = result.getString(8);
+                LocalTime end = LocalTime.parse(kraj, parser);
+
+                Training t = new Training(result.getInt(6), start, end, u, day);
+
+                tmp.put(u, t);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tmp;
     }
 }
