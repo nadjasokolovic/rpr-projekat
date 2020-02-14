@@ -35,6 +35,7 @@ public class FitpassDAO {
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
     private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit, ocjeneZaObjekatUpit, disciplineUpit;
     private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit, azurirajTreningKorisnikaUpit, evidentirajClanarinu, maxObavijestIDUpit, dodajObavijestUpit;
+    private PreparedStatement krajClanarineUpit;
 
     private Connection conn;
 
@@ -102,6 +103,7 @@ public class FitpassDAO {
             azurirajTreningKorisnikaUpit = conn.prepareStatement("UPDATE korisnik SET trening_id=?, iskoristeno_termina=? WHERE korisnik_id=?");
             evidentirajClanarinu = conn.prepareStatement("UPDATE korisnik SET pocetak_clanarine=?, kraj_clanarine=?, ukupno_termina=?, iskoristeno_termina=? WHERE osoba_id=?");
             dodajObavijestUpit = conn.prepareStatement("INSERT INTO obavijest VALUES(?,?,?)");
+            krajClanarineUpit = conn.prepareStatement("SELECT kraj_clanarine FROM korisnik WHERE korisnik_id=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -868,5 +870,15 @@ public class FitpassDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getEndOfMembershipFee(int userId) {
+        try {
+            krajClanarineUpit.setInt(1, userId);
+            return krajClanarineUpit.executeQuery().getString(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ""; //nece nikad vratiti ovo
     }
 }

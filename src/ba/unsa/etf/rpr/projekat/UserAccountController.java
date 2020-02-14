@@ -11,8 +11,14 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class UserAccountController {
 
@@ -122,12 +128,24 @@ public class UserAccountController {
 
     @FXML
     public void initialize() {
+        int personId = dao.getIdForUsername(this.username);
+        int userId = dao.getUserIdForPersonId(personId);
+        //Provjerava kraj clanarine za korisnika
+        String endMembershipFee = dao.getEndOfMembershipFee(userId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.yyyy.");
+        //pretvaranje Stringa u LocalDate
+        LocalDate endlocalDate = LocalDate.parse(endMembershipFee, formatter);
+        //danasnji datum
+        LocalDate now = LocalDate.now();
+
+        long daysBetween = DAYS.between(now, endlocalDate);
+        //ako je razlika manja od 7 dana treba poslati obavijest korisniku
+        if(daysBetween <= 7)
+            dao.addNotification(personId, "Vaša članarina ističe za " + daysBetween + " dana.");
+
         this.usernameLabel.setText(this.getUsername());
         this.iskoristenoTermina.setText(Integer.toString(this.getNumberOfTrainingsUsed()));
         this.preostaloTermina.setText(Integer.toString(this.getNumberOfTrainings()));
-        int personId = dao.getIdForUsername(this.username);
-        int userId = dao.getUserIdForPersonId(personId);
-        System.out.println(dao.getNotifications(userId).size());
         notificationsList.setItems(FXCollections.observableArrayList(dao.getNotifications(userId)));
     }
 }
