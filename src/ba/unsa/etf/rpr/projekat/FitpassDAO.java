@@ -36,7 +36,7 @@ public class FitpassDAO {
     private PreparedStatement disciplineZaObjekatUpit, izbrisiDisciplinuZaObjekat, dodajDisciplinuUpit, maxDisciplinaIDUpit, dodajDisciplinuZaObjekatUpit, postojiDisciplinaUpit, idDisciplineUpit;
     private PreparedStatement iskoristenoTerminaUpit, ukupnoTerminaUpit, obavijestiUpit, korisnikUpit, ocjeneZaObjekatUpit, disciplineUpit;
     private PreparedStatement idObjektaZaNazivUpit, treninziZaObjekatUpit, azurirajTreningKorisnikaUpit, evidentirajClanarinu, maxObavijestIDUpit, dodajObavijestUpit;
-    private PreparedStatement krajClanarineUpit, korisniciTreninziUpit;
+    private PreparedStatement krajClanarineUpit, korisniciTreninziUpit, tipOsobeUpit;
 
     private Connection conn;
 
@@ -106,6 +106,7 @@ public class FitpassDAO {
             dodajObavijestUpit = conn.prepareStatement("INSERT INTO obavijest VALUES(?,?,?)");
             krajClanarineUpit = conn.prepareStatement("SELECT kraj_clanarine FROM korisnik WHERE korisnik_id=?");
             korisniciTreninziUpit = conn.prepareStatement("SELECT k.korisnik_id, o.ime, o.prezime, o.username, o.password, t.trening_id, t.pocetak, t.kraj, t.dan FROM osoba o, korisnik k, trening t WHERE o.osoba_id=k.osoba_id AND k.trening_id=t.trening_id AND t.dan=?");
+            tipOsobeUpit = conn.prepareStatement("SELECT tip_osobe FROM osoba WHERE username=?");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -916,5 +917,15 @@ public class FitpassDAO {
             e.printStackTrace();
         }
         return tmp;
+    }
+
+    public String getTypeOfPerson(String username) {
+        try {
+            tipOsobeUpit.setString(1, username);
+            return tipOsobeUpit.executeQuery().getString(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

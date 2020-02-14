@@ -14,8 +14,6 @@ import java.util.ResourceBundle;
 
 
 public class LoginController {
-
-    public CheckBox adminCheckbox;
     public TextField usernameFld;
     public TextField passwordFld;
     public Hyperlink changePasswordUrl;
@@ -58,21 +56,22 @@ public class LoginController {
         Stage myStage = new Stage();
         //prilikom klika na dugme potrebno je provjeriti da li username i password pripadaju korisniku
         if(dao.checkUser(usernameFld.getText(), passwordFld.getText())) {
+            //provjera tipa korisnika
+            String type = dao.getTypeOfPerson(usernameFld.getText());
             try {
-                if (adminCheckbox.isSelected()) {
+                if (type.equals("admin")) {
                     FitpassDAO dao = FitpassDAO.getInstance();
                     AdminController ctrl = new AdminController(dao);
 
                     ResourceBundle bundle = ResourceBundle.getBundle("Translation");
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin.fxml"), bundle);
                     loader.setController(ctrl);
-                    //sendData(ctrl);
                     Parent root = loader.load();
                     myStage.setTitle("Fitpass Sarajevo");
                     myStage.setScene(new Scene(root, 700, 500));
                     myStage.show();
                 }
-                else {
+                else if(type.equals("korisnik")){
                     FitpassDAO dao = FitpassDAO.getInstance();
                     UserController ctrl = new UserController(dao);
                     ResourceBundle bundle = ResourceBundle.getBundle("Translation");
