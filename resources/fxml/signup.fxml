@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -62,11 +63,12 @@
                   <TextField fx:id="namefld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" />
                   <TextField fx:id="surnameFld" styleClass="surnameFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <TextField fx:id="usernameFld" styleClass="usernameFld" stylesheets="@../css/style.css" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <Button fx:id="createAccountBtn" mnemonicParsing="false" onAction="#createAccount" styleClass="createAccountBtn" stylesheets="@../css/style.css" text="%potvrdi" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-                  <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#closeWindow" styleClass="exitBtn" stylesheets="@../css/style.css" text="%odustani" GridPane.columnIndex="2" GridPane.rowIndex="5">
-                     <GridPane.margin>
-                        <Insets left="70.0" />
-                     </GridPane.margin></Button>
+                  <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                    <buttons>
+                      <Button fx:id="createAccountBtn" mnemonicParsing="false" onAction="#createAccount" prefHeight="31.0" prefWidth="116.0" styleClass="addBtn" stylesheets="@../css/style.css" text="%potvrdi" />
+                        <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#closeWindow" styleClass="addBtn" stylesheets="@../css/style.css" text="%odustani" />
+                    </buttons>
+                  </ButtonBar>
                </children>
                 </GridPane>
             </children>

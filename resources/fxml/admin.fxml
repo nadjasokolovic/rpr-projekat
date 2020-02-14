@@ -216,7 +216,7 @@
                                           <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                                 <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
                                                 <Label text="%name" GridPane.halignment="LEFT" GridPane.rowIndex="2">
@@ -225,18 +225,17 @@
                                                     </GridPane.margin>
                                                 </Label>
                                                 <TextField fx:id="disciplineNameFld" styleClass="nameFld" stylesheets="@../css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                <Button fx:id="deleteDisciplineBtn" mnemonicParsing="false" onAction="#deleteDiscipline" styleClass="deleteDisciplineBtn" stylesheets="@../css/style.css" text="%obrisi" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-                                                    <GridPane.margin>
-                                                        <Insets right="5.0" />
-                                                    </GridPane.margin>
-                                                </Button>
-                                                <Button fx:id="addDisciplineBtn" mnemonicParsing="false" onAction="#addDiscipline" styleClass="addDisciplineBtn" stylesheets="@../css/style.css" text="%dodaj" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                                    <GridPane.margin>
-                                                        <Insets left="5.0" />
-                                                    </GridPane.margin>
-                                                </Button>
                                           <Label text="%objekti" GridPane.rowIndex="1" />
                                           <ChoiceBox fx:id="objectChoice" prefHeight="31.0" prefWidth="166.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                            <buttons>
+                                              <Button fx:id="deleteDisciplineBtn" mnemonicParsing="false" onAction="#deleteDiscipline" prefHeight="31.0" prefWidth="116.0" styleClass="addBtn" stylesheets="@../css/style.css" text="%obrisi" />
+                                                <Button fx:id="addDisciplineBtn" mnemonicParsing="false" onAction="#addDiscipline" styleClass="addBtn" stylesheets="@../css/style.css" text="%dodaj" />
+                                            </buttons>
+                                             <GridPane.margin>
+                                                <Insets />
+                                             </GridPane.margin>
+                                          </ButtonBar>
                                             </children>
                                         </GridPane>
                                     </children>

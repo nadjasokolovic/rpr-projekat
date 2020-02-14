@@ -1,7 +1,6 @@
 package ba.unsa.etf.rpr.projekat;
 
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -9,17 +8,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
+
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 
-import javax.jws.soap.SOAPBinding;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 public class AdminController {
     //tab korisnici
@@ -594,4 +589,6 @@ public class AdminController {
         ctrl.setNumberOfTrainingsUsed(brojIskoristenihTermina);
         ctrl.setNotifications(obavijesti);
     }
+
+
 }

@@ -960,4 +960,8 @@ public class FitpassDAO {
             e.printStackTrace();
         }
     }
+
+    public Connection getConn() {
+        return conn;
+    }
 }
