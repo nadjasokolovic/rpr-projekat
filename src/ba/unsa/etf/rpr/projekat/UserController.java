@@ -50,7 +50,6 @@ public class UserController {
     @FXML
     public void initialize() {
         disciplineChoice.setItems(FXCollections.observableArrayList(dao.getAllDisciplines()));
-        //selectedObject.set(null);
 
         disciplineChoice.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override

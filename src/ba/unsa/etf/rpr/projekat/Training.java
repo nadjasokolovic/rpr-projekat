@@ -78,5 +78,4 @@ public class Training {
         this.id.set(id);
     }
 
-    //napraviti compareTo da poredi treninge po vremenu pocetka
 }

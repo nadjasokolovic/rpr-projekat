@@ -126,7 +126,7 @@ INSERT INTO "korisnik_aktivnost" VALUES (3,1);
 INSERT INTO "korisnik_aktivnost" VALUES (3,5);
 INSERT INTO "korisnik_aktivnost" VALUES (4,3);
 INSERT INTO "korisnik_aktivnost" VALUES (5,3);
-INSERT INTO "korisnik" VALUES (1,2,'1.1.2020.','1.2.2020.',12,7,1);
+INSERT INTO "korisnik" VALUES (1,2,'10.2.2020.','10.3.2020.',12,7,1);
 INSERT INTO "korisnik" VALUES (2,3,'18.12.2019.','18.1.2020.',16,4,4);
 INSERT INTO "korisnik" VALUES (3,4,'7.1.2020.','7.2.2020.',20,10,5);
 INSERT INTO "korisnik" VALUES (4,5,'14.1.2020.','14.2.2020.',16,5,6);

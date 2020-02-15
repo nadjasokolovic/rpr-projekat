@@ -156,11 +156,6 @@ public class FitpassDAO {
         return s;
     }
 
-    private ObservableList<User> users = FXCollections.observableArrayList();
-    private ObservableSet<Object> objects = FXCollections.observableSet();
-    private ObservableMap<String, HashSet<Object>> disciplines = FXCollections.observableHashMap(); //kljuc: naziv discipline, vrijednost:skup objekata u kojima postoje treninzi te discipline
-    private ObservableList<Training> trainings = FXCollections.observableArrayList();
-
     public static FitpassDAO getInstance() {
         if(instance == null)
             instance = new FitpassDAO();
