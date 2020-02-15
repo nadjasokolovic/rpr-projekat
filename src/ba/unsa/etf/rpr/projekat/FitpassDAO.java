@@ -13,7 +13,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class FitpassDAO {
+public class FitpassDAO implements ISearch, IEditing, IDeleting, IAdding {
     //konstanta koja oznacava broj termina koje dobijaju aktivni korisnici
     public final int numberOfFreeTrainings = 5;
 
