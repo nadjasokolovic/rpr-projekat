@@ -11,7 +11,7 @@ public class Validation {
             return true;
         //validan password mora imati barem 4 znaka
         if(newPassword.length() < 4) return false;
-
+        
         return true;
     }
 
